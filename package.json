@@ -9,7 +9,6 @@
     "server": "node ./bin/www",
     "start": "npm run server",
     "client": "cd client && npm start",
-    //"heroku-postbuild": "cd client && npm install --save-dev && npm install --save-exact && npm run build",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install --save-exact && npm run build"
   },
   "dependencies": {
