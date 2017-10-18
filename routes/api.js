@@ -66,11 +66,13 @@ router.get('/exchanges/:name', asyncMiddleware(async (req, res, next) => {
 
 }));
 
-router.get('/exchange/gdax/current', asyncMiddleware(async (req, res, next) => {
-    let gdax = new ccxt.gdax();
+router.get('/exchanges/:name/candlesticks', asyncMiddleware(async (req, res, next) => {
+    let exchange = new ccxt[req.params.name];
+    let markets = await exchange.loadMarkets();
 
-    // Market price
-
+    let candlesticks = await exchange.fetchOHLCV('ETH/USD', '30m')
+    
+    res.status(200).json(candlesticks);
 
 
 }));
