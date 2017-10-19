@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import CandleStickChart from '../components/chart-candlesticks';
+import CandleStickChartWithMACDIndicator from '../components/chart-candlesticksWithMACDIndicator';
 
 import { updateServerStatus } from '../actions/index';
-import { getData, getGdaxData } from '../components/utils';
+import { formatData } from '../components/utils';
 
 
 const styles = {
@@ -19,36 +20,28 @@ class Home extends Component {
   state = { 
     marketData: undefined,
     candlesticks: undefined,
-    gdaxCandlesticks: undefined
   };
   
   componentDidMount() {
     fetch('/api/v1')
       .then(res => res.json())
       .then((data) => {
-        console.log(data);
         this.props.updateServerStatus(data.status);
       });
 
     fetch('/api/v1/exchanges/gdax')
       .then(res => res.json())
       .then((data) => {
-        console.log(data);
         this.setState({ marketData: data });
       })
       
     fetch('/api/v1/exchanges/gdax/candlesticks')
       .then(res => res.json())
       .then((data) => {
-        console.log('myAPI', data);
-        this.setState({ gdaxCandlesticks: data });
+        var candles = formatData(data);
+        console.log('myAPI', candles);
+        this.setState({ candlesticks: candles });
       })
-    
-    getData().then(data => {
-      console.log('template', data);
-      this.setState({ candlesticks: data })
-    })
-
   }
 
   renderMarketData() {
@@ -78,17 +71,18 @@ class Home extends Component {
     }
 
     return (
-      <CandleStickChart type="hybrid" data={this.state.gdaxCandlesticks} />
+      <CandleStickChart type="hybrid" data={this.state.candlesticks} />
     )
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className="home-container" style={styles.container}>
         <p>Server status: { this.props.serverStatus }</p>
         { this.renderMarketData() }
         <br />
-        { this.state.gdaxCandlesticks && this.renderCandlesticks() }
+        { this.state.candlesticks && <CandleStickChartWithMACDIndicator type='hybrid' data={this.state.candlesticks} />}
       </div>
     )
   }

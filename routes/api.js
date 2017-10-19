@@ -72,7 +72,7 @@ router.get('/exchanges/:name/candlesticks', asyncMiddleware(async (req, res, nex
     let exchange = new ccxt[req.params.name];
     let markets = await exchange.loadMarkets();
 
-    let candlesticks = await exchange.fetchOHLCV('ETH/USD', '30m');
+    let candlesticks = await exchange.fetchOHLCV('ETH/USD', '1h');
     let candleData = [];
 
     const parseDate = timeParse("%Q");
