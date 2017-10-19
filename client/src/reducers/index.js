@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 
-import exampleReducer from './reducer_example';
+import serverStatus from './reducer_example';
+import exchangeData from './exchange-data';
 
 
 const rootReducer = combineReducers({
-    serverStatus: exampleReducer,
+    serverStatus,
+    exchangeData
 });
 
 export default rootReducer;

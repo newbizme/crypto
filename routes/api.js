@@ -68,11 +68,14 @@ router.get('/exchanges/:name', asyncMiddleware(async (req, res, next) => {
 
 }));
 
-router.get('/exchanges/:name/candlesticks', asyncMiddleware(async (req, res, next) => {
+router.get('/exchanges/candlesticks/:name/:curr', asyncMiddleware(async (req, res, next) => {
+    // '/api/v1/exchanges/candlesticks/gdax/ETH-USD'
     let exchange = new ccxt[req.params.name];
+    let curr = req.params.curr.replace("-","/");
+
     let markets = await exchange.loadMarkets();
 
-    let candlesticks = await exchange.fetchOHLCV('ETH/USD', '1h');
+    let candlesticks = await exchange.fetchOHLCV(curr, '1h');
     let candleData = [];
 
     const parseDate = timeParse("%Q");
