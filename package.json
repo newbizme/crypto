@@ -20,6 +20,8 @@
     "concurrently": "^3.4.0",
     "cookie-parser": "~1.4.3",
     "d3-dsv": "^1.0.7",
+    "d3-scale": "^1.0.6",
+    "d3-time": "^1.0.7",
     "d3-time-format": "^2.1.0",
     "debug": "~2.6.3",
     "express": "~4.15.2",

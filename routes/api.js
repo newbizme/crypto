@@ -2,6 +2,8 @@ const express = require('express');
 var path = require('path');
 const axios = require('axios');
 const ccxt = require('ccxt');
+const { timeParse } = require('d3-time-format');
+var fs = require('fs');
 
 const router = new express.Router();
 
@@ -70,11 +72,46 @@ router.get('/exchanges/:name/candlesticks', asyncMiddleware(async (req, res, nex
     let exchange = new ccxt[req.params.name];
     let markets = await exchange.loadMarkets();
 
-    let candlesticks = await exchange.fetchOHLCV('ETH/USD', '30m')
+    let candlesticks = await exchange.fetchOHLCV('ETH/USD', '30m');
+    let candleData = [];
+
+    const parseDate = timeParse("%Q");
+
+    candlesticks.reverse().map((c) => {
+        candleData.push({
+            date: new Date(c[0]),
+            open: c[1],
+            high: c[2],
+            low: c[3],
+            close: c[4],
+            volume: c[5]
+        })
+    })
     
-    res.status(200).json(candlesticks);
-
-
+    res.status(200).json(candleData);
 }));
+
+/* ERRORS OUT
+router.get('/exchanges/:name/candlesticks/save', asyncMiddleware(async (req, res, next) => {
+    var logger = fs.createWriteStream('../history-data/gdax-candlesticks.tsv', {
+        flags: 'a'
+    })
+
+    let exchange = new ccxt[req.params.name];
+    let markets = await exchange.loadMarkets();
+
+    let candlesticks = await exchange.fetchOHLCV('ETH/USD', '30m');
+    //let candleData = [];
+
+    const parseDate = timeParse("%Q");
+
+    // Map through data ascending, write to file
+    candlesticks.reverse().map((c) => {
+        logger.write(c.join('\t'))
+    })
+
+    logger.end() // close write action
+}));
+*/
 
 module.exports = router;

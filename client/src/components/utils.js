@@ -44,7 +44,6 @@ export function getGdaxData() {
     const promiseGdax = fetch('/api/v1/exchanges/gdax/candlesticks')
         .then((response) => {
             console.log(response.data);
-            parseGdaxData(response.data.candlesticks)
         })
     return promiseGdax;
 }

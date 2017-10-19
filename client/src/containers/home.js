@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import ChartCandlesticks from '../components/chart-candlesticks';
+import CandleStickChart from '../components/chart-candlesticks';
 
 import { updateServerStatus } from '../actions/index';
 import { getData, getGdaxData } from '../components/utils';
@@ -18,7 +18,8 @@ const styles = {
 class Home extends Component {
   state = { 
     marketData: undefined,
-    candlesticks: undefined
+    candlesticks: undefined,
+    gdaxCandlesticks: undefined
   };
   
   componentDidMount() {
@@ -35,24 +36,16 @@ class Home extends Component {
         console.log(data);
         this.setState({ marketData: data });
       })
-
       
-      /*
-      fetch('/api/v1/exchanges/gdax/candlesticks')
-        .then(res => res.text())
-        .then((data) => {
-          console.log(data);
-          // this.setState({ candlesticks: data.candlesticks })
-        })
-        */
-
-      getGdaxData().then(data => {
-        
+    fetch('/api/v1/exchanges/gdax/candlesticks')
+      .then(res => res.json())
+      .then((data) => {
+        console.log('myAPI', data);
+        this.setState({ gdaxCandlesticks: data });
       })
-        
     
     getData().then(data => {
-      console.log(data);
+      console.log('template', data);
       this.setState({ candlesticks: data })
     })
 
@@ -85,7 +78,7 @@ class Home extends Component {
     }
 
     return (
-      <ChartCandlesticks type="hybrid" data={this.state.candlesticks} />
+      <CandleStickChart type="hybrid" data={this.state.gdaxCandlesticks} />
     )
   }
 
@@ -95,7 +88,7 @@ class Home extends Component {
         <p>Server status: { this.props.serverStatus }</p>
         { this.renderMarketData() }
         <br />
-        { this.renderCandlesticks() }
+        { this.state.gdaxCandlesticks && this.renderCandlesticks() }
       </div>
     )
   }
