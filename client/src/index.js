@@ -4,6 +4,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
+
 // Google's MuiThemeProvider
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -16,6 +17,8 @@ import thunk from 'redux-thunk';
 import ReduxPromise from 'redux-promise';
 //import reducers from './reducers';
 import rootReducer from './reducers/index';
+
+require('dotenv').config();
 
 const createStoreWithMiddleware = applyMiddleware(thunk, ReduxPromise)(createStore);
 

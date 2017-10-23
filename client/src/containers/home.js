@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 
 import CandleStickChartWithMACDIndicator from '../components/chart-candlesticksWithMACDIndicator';
 import ExchangePicker from '../components/exchange-picker';
+import Ticker from '../components/ticker';
 
 import { 
   updateServerStatus,
@@ -39,20 +40,12 @@ class Home extends Component {
   renderMarketData() {
     return (
       <div>
-        <h3>GDAX - ETH/USD</h3>
-        <ul>
-          <li>Current Bid: { this.props.exchangeData.ticker.bid }</li>
-          <li>Current Ask: { this.props.exchangeData.ticker.ask }</li>
-          <li>24h High: { this.props.exchangeData.ticker.high }</li>
-          <li>24h Low: { this.props.exchangeData.ticker.low }</li>
-          <li>Volume: { this.props.exchangeData.ticker.volume }</li>
-        </ul>
+        <Ticker />
       </div>
     )
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="home-container" style={styles.container}>
         <p>Server status: { this.props.serverStatus }</p>

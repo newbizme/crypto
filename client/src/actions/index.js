@@ -19,7 +19,6 @@ export function fetchTickerData() {
     return (dispatch, getState) => {
         axios.get('/api/v1/exchanges/gdax')
             .then((response) => {
-                console.log(response);
                 dispatch(returnTickerData(response.data));
             })
     };  
@@ -60,7 +59,6 @@ export function fetchCandlestickData(exchange, currency) {
         .then(res => res.json())
         .then((data) => {
             var candles = formatData(data);
-            console.log('myAPI', candles);
             dispatch(returnCandlestickData(candles));
         })
     }

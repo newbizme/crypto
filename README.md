@@ -16,6 +16,7 @@
 <br/>
 <h4>To Start:</h4>
 <p>Update config/index.json file with dbUri, jwtSecret, and FB Ids (optional)</p>
+<p>Create a .env file at the project root, and use this file to store any API keys and secrets (IMPORTANT: Ensure you have a .gitignore file set up so that it doesn't sync to Github)</p>
 <p>For development:</p>
 <ul>
     <li>npm start // begins the Express server</li>

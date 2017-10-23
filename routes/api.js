@@ -37,20 +37,15 @@ router.get('/exchanges/:name', asyncMiddleware(async (req, res, next) => {
 
     // Instantiate exchange with given id
     let exchange = new ccxt[req.params.name]();
-    console.log("Exchange initiated: " + req.params.name);
 
     // Load market data
-    console.log("Loading market data...");
     let markets = await exchange.loadMarkets();
-    console.log("Market data loaded.");
 
     // Load orderbook to determine the intersection of bids & asks (aka market price)
-    console.log("Loading orderbook...");
     let orderbook = await exchange.fetchOrderBook('ETH/USD');
     let bid = orderbook.bids.length ? orderbook.bids[0][0] : undefined;
     let ask = orderbook.asks.length ? orderbook.asks[0][0] : undefined;
     let spread = (bid && ask) ? ask - bid : undefined;
-    console.log(exchange.id, 'Market Price', {bid, ask, spread});
 
     // Fetch the ticker
     let ticker = await exchange.fetchTicker('ETH/USD');
@@ -94,27 +89,13 @@ router.get('/exchanges/candlesticks/:name/:curr', asyncMiddleware(async (req, re
     res.status(200).json(candleData);
 }));
 
-/* ERRORS OUT
-router.get('/exchanges/:name/candlesticks/save', asyncMiddleware(async (req, res, next) => {
-    var logger = fs.createWriteStream('../history-data/gdax-candlesticks.tsv', {
-        flags: 'a'
-    })
+router.get('/tickers/all', asyncMiddleware(async (req, res, next) => {
+    let exchange = new ccxt['bittrex']();
+    exchange.apiKey = process.env.BITTREX_APIKEY;
+    exchange.secret = process.env.BITTREX_APISECRET;
 
-    let exchange = new ccxt[req.params.name];
-    let markets = await exchange.loadMarkets();
-
-    let candlesticks = await exchange.fetchOHLCV('ETH/USD', '30m');
-    //let candleData = [];
-
-    const parseDate = timeParse("%Q");
-
-    // Map through data ascending, write to file
-    candlesticks.reverse().map((c) => {
-        logger.write(c.join('\t'))
-    })
-
-    logger.end() // close write action
-}));
-*/
+    let tickers = await (exchange.fetchTickers ()) // all tickers indexed by their symbols
+    res.status(200).json(tickers);
+}))
 
 module.exports = router;
