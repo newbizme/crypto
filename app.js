@@ -16,7 +16,7 @@ var config = require('./config');
 var User = require('./models/user');
 
 // Connect to the database and load models
-require('./models').connect(process.env.MONGOLAB_URI || config.dbUri);
+require('./models').connect(process.env.MONGODB_URI || config.dbUri);
 
 var app = express();
 
