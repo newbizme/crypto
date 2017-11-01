@@ -1,6 +1,6 @@
 {
-    "dbUri": "mongodb://server-account:VM$ervice@ds145292.mlab.com:45292/portfolio-api",
+    "dbUri": "mongodb://localhost:27017/crypto-bot",
     "jwtSecret": "bumrush to inifinity696969",
-    "FB_ID": "215024398970477",
-    "FB_Secret": "f4d5ff98b6fb47969015b1856496d09d"
+    "FB_ID": "1",
+    "FB_Secret": "1"
 }

@@ -41,6 +41,7 @@ export default class Ticker extends Component {
         fetch('/api/v1/tickers/all')
             .then(res => res.json())
             .then((data) => {
+                console.log('ticker', data);
                 this.setState({ tickerData: data });
             });
     }

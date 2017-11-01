@@ -96,6 +96,22 @@ router.get('/tickers/all', asyncMiddleware(async (req, res, next) => {
 
     let tickers = await (exchange.fetchTickers ()) // all tickers indexed by their symbols
     res.status(200).json(tickers);
-}))
+}));
+
+router.get('/tickers/top', asyncMiddleware(async (req, res, next) => {
+    let exchange = new ccxt['bittrex']();
+    exchange.apiKey = process.env.BITTREX_APIKEY;
+    exchange.secret = process.env.BITTREX_APISECRET;
+    let tickers = await (exchange.fetchTickers ()) 
+    const symbols = ['BTC/USDT', 'ETH/USDT', 'LTC/USDT', 'XMR/USDT', 'DASH/USDT', 'NEO/USDT', 'ZEC/USDT', 'LSK/BTC', 'GNT/ETH'];
+    
+    let data = [];
+    symbols.map((symbol) => {
+        data.push(tickers[symbol]);
+    })
+
+    res.status(200).json(data);
+}));
+
 
 module.exports = router;
