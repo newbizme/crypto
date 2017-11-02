@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import ccxt from 'ccxt';
-
 const symbols = ['BTC/USDT', 'ETH/USDT', 'LTC/USDT', 'XMR/USDT', 'DASH/USDT', 'NEO/USDT', 'ZEC/USDT', 'LSK/BTC', 'GNT/ETH'];
 
 const styles = {

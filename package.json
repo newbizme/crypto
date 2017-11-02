@@ -10,7 +10,7 @@
     "start": "npm run server",
     "dev": "nodemon ./bin/www",
     "client": "cd client && npm start",
-    "zheroku-postbuild": "cd client && npm install --only=dev && npm install --save-exact && npm run build"
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install --save-exact && npm run build"
   },
   "dependencies": {
     "axios": "^0.16.2",

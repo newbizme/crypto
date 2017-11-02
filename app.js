@@ -30,15 +30,19 @@ app.set('view engine', 'jade');
 
 // Tell the app to look for static files in these directories
 // THIS WAS TO PRESENT AN INDEX.HTML FILE FOR THE API-ONLY SERVER
-app.use(express.static(path.join(__dirname, 'public')));
+
+/* !!! COMMENT OUT TO PUSH REAL BUILD !!! */
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve static files from the React app
-// app.use(express.static(path.join(__dirname, 'client/build')));
+
+/* !!! UNCOMMENT TO PUSH REAL BUILD !!! */
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Expose user upload images to path "http://localhost:3000/uploads"
 // app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// uncomment after placing your favicon in /public
+// !!! uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
