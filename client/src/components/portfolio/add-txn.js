@@ -7,6 +7,9 @@ import TimePicker from 'material-ui/TimePicker';
 const s = {
     container: {
 
+    },
+    datetimePicker: {
+        color: '#fff'
     }
 };
 
@@ -57,42 +60,58 @@ export default class AddTxn extends Component {
         if ( !tradingPair || !action || quantity===0 || !time || !date ) {
             this.setState({ error: true });
         } else {
-            // send data
+            this.compileTxnObject();
             this.setState({ modalOpen: false });
         }  
     }
 
+    compileTxnObject = () => {
+        const { tradingPair, action, quantity, price, date, time } = this.state;
+
+        const created = new Date(); // create new Date() for now
+        const currencies = tradingPair.split('/');
+
+        let parseDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+        let parseTime = time.getHours() + ":" + time.getMinutes() + ":00";
+        let datetime = new Date(parseDate + " " + parseTime);
+        // Y-m-d H:i:s format
+
+        let data = {
+            timestamp: datetime.toISOString(),
+            action: action.toLowerCase(),
+            currency: currencies[0],
+            base: currencies[1],
+            quantity: quantity,
+            price: price,
+            created: created.toISOString()
+        };
+        console.log("TXN:", data);
+    }
+
     handleCurrencySelection = (e, data) => {
-        console.log(data.value);
         this.setState({ tradingPair: data.value })
     }
 
     handleActionSelection = (e, data) => {
-        console.log(data.value);
         this.setState({ action: data.value });
     }
 
     handleQuantityChange = (e, data) => {
-        console.log(data.value);
         this.setState({ quantity: data.value });
     }
 
     handlePriceChange = (e, data) => {
-        console.log(data.value);
         this.setState({ price: data.value });
     }
 
     handleDateSelection = (e, date) => {
-        console.log(date);
         this.setState({ date: date });
     }
     handleTimeSelection = (e, time) => {
-        console.log(time);
         this.setState({ time: time });
     }
 
     render() {
-        console.log(this.state);
         return (
             <div style={s.container}>
                 <Modal 
@@ -106,7 +125,7 @@ export default class AddTxn extends Component {
                         <Dropdown
                             button floating labeled closeOnChange selection search
                             className='icon'
-                            icon='currency'
+                            icon='exchange'
                             options={currencyPairs}
                             onChange={this.handleCurrencySelection.bind(this)}
                             placeholder='Trading Pair'
@@ -141,6 +160,8 @@ export default class AddTxn extends Component {
                             hintText="Trade Date"
                             value={this.state.date}
                             onChange={this.handleDateSelection}
+                            textFieldStyle={s.datetimePicker}
+                            style={s.datetimePicker}
                             />
                         <TimePicker
                             format="24hr"
@@ -148,6 +169,8 @@ export default class AddTxn extends Component {
                             autoOk={true}
                             value={this.state.time}
                             onChange={this.handleTimeSelection}
+                            textFieldStyle={s.datetimePicker}
+                            style={s.datetimePicker}
                             />
 
                         <Message 
