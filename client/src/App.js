@@ -3,6 +3,11 @@ import logo from './logo.svg';
 import './App.css';
 
 import Home from './containers/home';
+import Market from './containers/market';
+import LoginPage from './containers/login-page';
+import SignUpPage from './containers/sign-up-page';
+import Logout from './components/logout';
+
 import TopNav from './components/top-nav';
 
 
@@ -29,7 +34,11 @@ class App extends Component {
 
           <Switch>
             <Route exact path="/" component={Home}/>
-            <Route component={NoMatch}/>
+            <Route exact path="/market" component={Market}/>
+            <Route exact path="/logout" component={Logout}/>
+            <Route exact path="/login" component={LoginPage}/>
+            <Route exact path="/signup" component={SignUpPage}/>
+            <Route component={Home}/>
           </Switch>
         </div>
       </Router>

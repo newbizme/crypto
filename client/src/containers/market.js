@@ -5,10 +5,9 @@ import { bindActionCreators } from 'redux';
 
 import Auth from '../modules/auth';
 
+import CandleStickChartWithMACDIndicator from '../components/chart-candlesticksWithMACDIndicator';
+import ExchangePicker from '../components/exchange-picker';
 import Ticker from '../components/ticker';
-import AddTxn from '../components/portfolio/add-txn';
-
-import { Button } from 'semantic-ui-react';
 
 import { 
   updateServerStatus,
@@ -22,9 +21,18 @@ const styles = {
   }
 }
 
-class Home extends Component {
+class Market extends Component {
   componentDidMount() {
-    // this.props.fetchTickerData();
+    this.props.fetchTickerData();
+    this.props.fetchCandlestickData('gdax','ETH-USD');
+  }
+
+  renderMarketData() {
+    return (
+      <div>
+        <Ticker />
+      </div>
+    )
   }
 
   testAuthClient = () => {
@@ -46,16 +54,15 @@ class Home extends Component {
   render() {
     return (
       <div className="home-container" style={styles.container}>
-        <h1>Portfolio</h1>
-        <Button
-          color='red'
-          content='Like'
-          icon='heart'
-          label={{ basic: true, color: 'red', pointing: 'left', content: '2,048' }}
-          />
-        <br/>
-        <AddTxn />
+        { this.renderMarketData() }
 
+        <button onClick={this.testAuthClient}>Test Auth - Client</button>
+        <button onClick={this.testAuthServer}>Test Auth - Server</button>
+
+        <br />
+        <ExchangePicker />
+        { this.props.exchangeData.candlesticks && 
+          <CandleStickChartWithMACDIndicator type='hybrid' data={this.props.exchangeData.candlesticks} />}
       </div>
     )
   }
@@ -79,4 +86,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Market);

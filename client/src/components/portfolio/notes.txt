@@ -1,0 +1,57 @@
+USER ACTION 
+==> Add Transaction:
+
+Buy/Sell
+Timestamp
+Trading Pair eg. BTC/USD
+Trade price
+Quantity
+
+--> Generate object
+{
+    action: 'buy',
+    base: 'USD',
+    currency: 'BTC',
+    quantity: 1.2,
+    price: 7211.22,
+    timestamp: 11/2/2017 20:10:00
+}
+--> POST to api/v1/transactions
+
+SERVER ACTION 
+==> store object in db.txns
+
+==> update portfolio timeline
+// time series portfolio data, with a data point at each transactions
+
+portfolioTimeline=[]
+// data scheme for portfolio item
+{
+    timestamp: 11/2/2017 20:10:00,
+    BTC: 1.2,
+    USD: -7423.22
+}
+
+let p = portfolioTimeline;
+txns sort ascending(timestamp)
+txns.map((txn, index) => {
+
+    // handle first transaction
+    if (index===0) {
+        let data = {};
+        data.timestamp = txn.timestamp;
+        data[txn.currency] = txn.quantity;
+        data[txn.base] = -1 * txn.quantity * txn.price
+
+        p.push(data);
+    } else {
+        let data = p[index-1];
+        data.timestamp = txn.timestamp;
+        data[txn.currency] = p[index-1] + txn.quantity;
+        data[txn.base] = p[index-1] - (txn.quantity * txn.price)
+
+        p.push(data);
+    }
+    
+
+})

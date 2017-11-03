@@ -85,15 +85,17 @@ passport.use('facebook', FacebookStrategy);
 // Pass the authentication checker middleware for the priv route
 const authCheckMiddleware = require('./middleware/auth-check');
 app.use('/priv/v1', authCheckMiddleware);
+app.use('/user/v1', authCheckMiddleware);
 
 // API & Auth Routes
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 const privRoutes = require('./routes/priv');
+const userRoutes = require('./routes/user');
 app.use('/auth/v1', authRoutes);
 app.use('/api/v1', apiRoutes);
 app.use('/priv/v1', privRoutes);
-
+app.use('/user/v1', userRoutes);
 
 
 

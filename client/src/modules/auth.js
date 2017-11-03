@@ -30,11 +30,13 @@ class Auth {
    *
    */
   static deauthenticateUser() {
+    // destroy session on client
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    
     // destroy session on server
     const axios = require('axios');
-    axios.get('/auth/logout')
+    axios.get('/auth/v1/logout')
         .then((response) => {
           console.log(response.data);
     });
