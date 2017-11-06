@@ -1,35 +1,41 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Icon, Menu } from 'semantic-ui-react';
 
 import LoginButton from './login-button';
 import AuthButtons from './auth/auth-buttons';
 
+// TODO: Add active state depending on route. Need to pass route in: active={this.props.location.pathname === '/portfolio'} 
+
+
 const TopNav = (props) => {
-
+    console.log(window.location.pathname);
     return (
-        <nav className="nav">
-            <div className="nav-left">
-                <Link to='/'>
-                <a className="nav-item">
-                <h4>CryptoNow</h4>
-                </a>
-                </Link>
-            </div>
+        <Menu icon='labeled' inverted>
+            <Menu.Item header>CryptoNow</Menu.Item>
 
-            <span className="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
+            <Link to="/portfolio">
+            <Menu.Item name='gamepad' active={window.location.pathname === '/portfolio' }>
+                <Icon name='gamepad' />
+                Portfolio
+            </Menu.Item>
+            </Link>
 
+            <Link to="/market">
+            <Menu.Item name='video camera' active={window.location.pathname === '/market' }>
+                <Icon name='video camera' />
+                Market
+            </Menu.Item>
+            </Link>
 
-            <div className="nav-right nav-menu">
-                <a className="nav-item">
+            <Menu.Menu position="right">
+                <Menu.Item>
                     <AuthButtons />
-                </a>
-            </div>
-        </nav>
-    )
+                </Menu.Item>
+            </Menu.Menu>
+
+        </Menu>
+    );
 }
 
 export default TopNav;

@@ -61,7 +61,7 @@ export default class AddTxn extends Component {
             this.setState({ error: true });
         } else {
             this.compileTxnObject();
-            this.setState({ modalOpen: false });
+            // this.setState({ modalOpen: false });
         }  
     }
 
@@ -86,6 +86,8 @@ export default class AddTxn extends Component {
             created: created.toISOString()
         };
         console.log("TXN:", data);
+        this.props.addTxn(data);
+        this.setState({ modalOpen: false });
     }
 
     handleCurrencySelection = (e, data) => {
@@ -115,10 +117,16 @@ export default class AddTxn extends Component {
         return (
             <div style={s.container}>
                 <Modal 
-                    trigger={<Button circular icon='add' onClick={this.handleOpen}></Button>}
+                    trigger={<Button 
+                                content='New Txn' 
+                                icon='add'
+                                labelPosition='left'
+                                positive
+                                onClick={this.handleOpen}>
+                            </Button>}
                     open={this.state.modalOpen}
                     onClose={this.handleCancel}
-                    basic 
+                     
                     size='small'>
                     <Header icon='archive' content='Add New Transaction' />
                     <Modal.Content>

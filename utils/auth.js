@@ -2,33 +2,28 @@ const jwt = require('jsonwebtoken');
 const User = require('mongoose').model('User');
 const config = require('../config');
 
-/**
- * The Auth Checker Middleware Function
- */
-module.exports = (req, res, next) => {
+export function getUser (req) {
     if (!req.headers.authorization) {
-        return res.status(401).end();
+        return { status: 401 };
     }
 
-    // Get the last part from an authorization header string like "bearer token-value"
     const token = req.headers.authorization.split(' ')[1];
-
+    
     // Decode the token using a secret key-phrase
     return jwt.verify(token, config.jwtSecret, (err, decoded) => {
         // The 401 code is for unauthorized status
-        if (err) { return res.status(401).end(); }
+        if (err) { return { status: 401 } }
 
         const userId = decoded.sub;
-        req.userID = userId;
-        // console.log(userId);
+        console.log(userId);
 
         // Check if a user exists
         return User.findById(userId, (userErr, user) => {
             if (userErr || !user) {
-                return res.status(401).end();
+                return { status: 401 }
             }
 
-            return next();
+            return { status: 200, userId: userId };
         });
     });
-};
+}

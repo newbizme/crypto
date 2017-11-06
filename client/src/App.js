@@ -4,6 +4,7 @@ import './App.css';
 
 import Home from './containers/home';
 import Market from './containers/market';
+import Portfolio from './containers/portfolio';
 import LoginPage from './containers/login-page';
 import SignUpPage from './containers/sign-up-page';
 import Logout from './components/logout';
@@ -16,9 +17,8 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Switch
+  Switch,
 } from 'react-router-dom'
-
 
 
 
@@ -34,6 +34,7 @@ class App extends Component {
 
           <Switch>
             <Route exact path="/" component={Home}/>
+            <Route exact path="/portfolio" component={Portfolio}/>
             <Route exact path="/market" component={Market}/>
             <Route exact path="/logout" component={Logout}/>
             <Route exact path="/login" component={LoginPage}/>

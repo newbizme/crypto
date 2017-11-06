@@ -1,18 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
 
 import Auth from '../../modules/auth';
 
 const AuthButtons = () => {
     if (Auth.isUserAuthenticated()) {
         return (
-            <Link to='/logout'><button className="button">Logout</button></Link>
+            <Link to='/logout'><Button inverted primary>Logout</Button></Link>
         );
     } else {
         return (
             <div>
-                <Link to='/login'><button className="button is-primary">Login</button></Link>
-                <Link to='/signup'><button className="button">Signup</button></Link>
+                <Button.Group>
+                    <Link to='/login'><Button primary>Login</Button></Link>
+                    <Button.Or />
+                    <Link to='/signup'><Button inverted>Signup</Button></Link>
+                </Button.Group>
+                
             </div>
         );
     }

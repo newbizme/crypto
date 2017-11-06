@@ -70,7 +70,7 @@ class LoginPage extends React.Component {
         console.log('login-page > authenticateUser', Auth.isUserAuthenticated());
         // change the current URL to /
         //this.context.router.replace('/');
-        this.setState({ redirectTo: '/' });
+        this.setState({ redirectTo: '/portfolio' });
       } else {
         // failure
 
