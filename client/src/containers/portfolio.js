@@ -8,6 +8,7 @@ import Auth from '../modules/auth';
 import Ticker from '../components/ticker';
 import AddTxn from '../components/portfolio/add-txn';
 import TxnsTable from '../components/portfolio/txns-table';
+import NetWorth from '../components/portfolio/net-worth';
 
 import { Button } from 'semantic-ui-react';
 
@@ -17,6 +18,10 @@ import {
   deleteTxn
 } from '../actions/portfolio';
 
+import {
+    fetchTickers
+} from '../actions/ticker';
+
 const styles = {
   container: {
     padding: '15px',
@@ -25,6 +30,7 @@ const styles = {
 
 class Home extends Component {
   componentDidMount() {
+    this.props.fetchTickers();
     this.props.fetchTxns();
   }
 
@@ -49,6 +55,7 @@ class Home extends Component {
     return (
       <div className="home-container" style={styles.container}>
         <h1>Portfolio</h1>
+        <NetWorth ticker={this.props.ticker} portfolio={this.props.portfolio.portfolio} />
         <Button
           color='red'
           content='Like'
@@ -68,12 +75,14 @@ class Home extends Component {
 function mapStateToProps({ 
     serverStatus,
     exchangeData,
-    portfolio
+    portfolio,
+    ticker
   }) {
   return { 
     serverStatus,
     exchangeData,
-    portfolio
+    portfolio,
+    ticker
   };
 }
 
@@ -81,7 +90,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ 
     addTxn, 
     fetchTxns,
-    deleteTxn
+    deleteTxn,
+    fetchTickers
   }, dispatch);
 }
 
