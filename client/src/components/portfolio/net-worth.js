@@ -1,35 +1,52 @@
 import React from 'react';
+import InvestmentRollup from './investment-rollup';
+import SimplePieChart from './pie-chart';
+// import PieChartEz from './pie-chart-ez';
 
 function convertToUSD(ticker, portfolio) {
     const btcPrice = ticker['BTC/USDT'].bid;
     const ethPrice = ticker['ETH/USDT'].bid;
 
     let vals = [];
+    let net = 0;
+    let investment = 0;
+    portfolio.hasOwnProperty('USD') ? investment = portfolio['USD'] : '';
+
     for (const key in portfolio) {
         if (key !== 'USD' && key !== 'timestamp') {
             if (ticker.hasOwnProperty(key + '/USDT')) {
+                let value = ticker[key + '/USDT'].bid * portfolio[key];
+                net += value;
                 vals.push({
                     currency: key,
                     amount: portfolio[key],
-                    value: ticker[key + '/USDT'].bid * portfolio[key]
+                    value: Math.round(value * 1e2)/1e2
                 })
             } else if (ticker.hasOwnProperty(key + '/BTC')) {
+                let value = portfolio[key] * ticker[key + '/BTC'].bid * btcPrice;
+                net += value;
                 vals.push({
                     currency: key,
                     amount: portfolio[key],
-                    value: portfolio[key] * ticker[key + '/BTC'].bid * btcPrice
+                    value: Math.round(value * 1e2)/1e2
                 })
             } else if (ticker.hasOwnProperty(key + '/ETH')) {
+                let value = portfolio[key] * ticker[key + '/ETH'].bid * ethPrice;
+                net += value;
                 vals.push({
                     currency: key,
                     amount: portfolio[key],
-                    value: portfolio[key] * ticker[key + '/ETH'].bid * ethPrice
+                    value: Math.round(value * 1e2)/1e2
                 })
             }
         }
     }
 
-    return vals;
+    return {
+        value: Math.round(net *1e2)/1e2,
+        assets: vals,
+        investment: Math.round(investment * 1e2)/1e2
+    };
 }
 
 const NetWorth = (props) => {
@@ -42,13 +59,12 @@ const NetWorth = (props) => {
     const holdings = props.portfolio[i];
     console.log(holdings);
 
-    const value = convertToUSD(props.ticker, holdings);
-    
+    const net = convertToUSD(props.ticker, holdings);
+    console.log(net);
     return (
         <div>
-            <p>BTC: { holdings.hasOwnProperty('BTC') ? holdings['BTC'] : 0 }</p>
-            <p>ETH: { holdings.hasOwnProperty('ETH') ? holdings['ETH'] : 0 }</p>
-            <p>Investment: { holdings.hasOwnProperty('USD') ? holdings['USD'] : 0 }</p>
+            <InvestmentRollup value={net.value} investment={net.investment} />
+            <SimplePieChart assets={net.assets} />
         </div>
     )
 }
