@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -6,8 +7,9 @@ import { bindActionCreators } from 'redux';
 import Auth from '../modules/auth';
 
 import Ticker from '../components/ticker';
+import AuthButtons from '../components/auth/auth-buttons';
 
-import { Button } from 'semantic-ui-react';
+import { Button, Icon, Message } from 'semantic-ui-react';
 
 import { 
   addTxn,
@@ -46,13 +48,18 @@ class Home extends Component {
     console.log(this.props);
     return (
       <div className="home-container" style={styles.container}>
-        <h1>Home</h1>
-        <Button
-          color='red'
-          content='Like'
-          icon='heart'
-          label={{ basic: true, color: 'red', pointing: 'left', content: '2,048' }}
-          />
+        <div style={{textAlign: 'center', color: 'green'}}>
+        <Message success color='black'>
+          <Message.Header>Login to track your portfolio</Message.Header>
+          <Message.Content>
+            <br />
+            <AuthButtons />
+            <br /><br />
+            <p>Already logged in? Click the pie chart!</p>
+            <Link to='/portfolio'><Icon name='pie chart' size='massive' /></Link>
+          </Message.Content>
+        </Message>
+        </div>
       </div>
     )
   }

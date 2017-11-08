@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 
 import Auth from '../modules/auth';
 
+import { Message } from 'semantic-ui-react';
+
 import CandleStickChartWithMACDIndicator from '../components/chart-candlesticksWithMACDIndicator';
 import ExchangePicker from '../components/exchange-picker';
 import Ticker from '../components/ticker';
@@ -54,6 +56,11 @@ class Market extends Component {
   render() {
     return (
       <div className="home-container" style={styles.container}>
+        <Message negative
+          header='Market analysis is under construction'
+          icon='warning circle'
+          />
+
         { this.renderMarketData() }
 
         <button onClick={this.testAuthClient}>Test Auth - Client</button>

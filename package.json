@@ -1,6 +1,6 @@
 {
-  "name": "react-app-skeleton",
-  "version": "0.1.0",
+  "name": "crypto-now",
+  "version": "1.0.0",
   "engines": {
     "node": "8.7.0"
   },

@@ -12,21 +12,15 @@ const TopNav = (props) => {
     console.log(window.location.pathname);
     return (
         <Menu icon='labeled' inverted>
-            <Menu.Item header>CryptoNow</Menu.Item>
 
             <Link to="/portfolio">
             <Menu.Item name='gamepad' active={window.location.pathname === '/portfolio' }>
-                <Icon name='gamepad' />
+                <Icon name='pie chart' />
                 Portfolio
             </Menu.Item>
             </Link>
 
-            <Link to="/market">
-            <Menu.Item name='video camera' active={window.location.pathname === '/market' }>
-                <Icon name='video camera' />
-                Market
-            </Menu.Item>
-            </Link>
+
 
             <Menu.Menu position="right">
                 <Menu.Item>
@@ -37,5 +31,14 @@ const TopNav = (props) => {
         </Menu>
     );
 }
+
+/*
+            <Link to="/market">
+            <Menu.Item name='video camera' active={window.location.pathname === '/market' }>
+                <Icon name='line chart' />
+                Market
+            </Menu.Item>
+            </Link>
+            */
 
 export default TopNav;

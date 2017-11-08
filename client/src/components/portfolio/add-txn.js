@@ -4,6 +4,8 @@ import { Button, Header, Icon, Modal, Dropdown,
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 
+import Auth from '../../modules/auth';
+
 const s = {
     container: {
 
@@ -118,6 +120,7 @@ export default class AddTxn extends Component {
             <div style={s.container}>
                 <Modal 
                     trigger={<Button 
+                                disabled={!Auth.isUserAuthenticated()}
                                 content='New Txn' 
                                 icon='add'
                                 labelPosition='left'

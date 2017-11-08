@@ -10,7 +10,9 @@ import AddTxn from '../components/portfolio/add-txn';
 import TxnsTable from '../components/portfolio/txns-table';
 import NetWorth from '../components/portfolio/net-worth';
 
-import { Button } from 'semantic-ui-react';
+import AuthButtons from '../components/auth/auth-buttons';
+
+import { Button, Message, Icon } from 'semantic-ui-react';
 
 import { 
   addTxn,
@@ -54,14 +56,20 @@ class Home extends Component {
     console.log(this.props);
     return (
       <div className="home-container" style={styles.container}>
-        <h1>Portfolio</h1>
+        { !Auth.isUserAuthenticated() &&         
+            <div style={{textAlign: 'center', color: 'green'}}>
+            <Message success color='black'>
+            <Message.Header>Login to track your portfolio</Message.Header>
+            <Message.Content>
+                <br />
+                <AuthButtons />
+                <br />
+                <Icon name='pie chart' size='massive' />
+            </Message.Content>
+            </Message>
+            </div> }
+
         <NetWorth ticker={this.props.ticker} portfolio={this.props.portfolio.portfolio} />
-        <Button
-          color='red'
-          content='Like'
-          icon='heart'
-          label={{ basic: true, color: 'red', pointing: 'left', content: '2,048' }}
-          />
         <br/>
         <AddTxn addTxn={this.props.addTxn} />
         <TxnsTable 

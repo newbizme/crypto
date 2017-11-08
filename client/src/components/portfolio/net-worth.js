@@ -50,8 +50,8 @@ function convertToUSD(ticker, portfolio) {
 }
 
 const NetWorth = (props) => {
-    if (props.portfolio.length === 0) {
-        return <div><p>No portfolio</p></div>;
+    if (props.portfolio.length === 0 || props.ticker.length ===0 ) {
+        return <div></div>;
     }
 
     console.log(props);    
@@ -64,9 +64,10 @@ const NetWorth = (props) => {
     return (
         <div>
             <InvestmentRollup value={net.value} investment={net.investment} />
-            <SimplePieChart assets={net.assets} />
         </div>
     )
 }
+
+// <SimplePieChart assets={net.assets} />
 
 export default NetWorth;
