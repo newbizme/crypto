@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import socketIOClient from 'socket.io-client';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -21,7 +22,8 @@ import {
 } from '../actions/portfolio';
 
 import {
-    fetchTickers
+    fetchTickers,
+    returnTickers
 } from '../actions/ticker';
 
 const styles = {
@@ -30,9 +32,18 @@ const styles = {
   }
 }
 
-class Home extends Component {
-  componentDidMount() {
+class Portfolio extends Component {
+  componentWillMount() {
     this.props.fetchTickers();
+  }
+
+  componentDidMount() {
+    // this.props.fetchTickers();
+    // socket.io -> action > returnTickers()
+    const socket = socketIOClient();
+    socket.on("FromAPI", data => this.props.returnTickers(data));
+
+
     this.props.fetchTxns();
   }
 
@@ -101,8 +112,9 @@ function mapDispatchToProps(dispatch) {
     addTxn, 
     fetchTxns,
     deleteTxn,
-    fetchTickers
+    fetchTickers,
+    returnTickers
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Portfolio);

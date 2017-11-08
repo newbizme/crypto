@@ -89,13 +89,12 @@ router.get('/exchanges/candlesticks/:name/:curr', asyncMiddleware(async (req, re
     res.status(200).json(candleData);
 }));
 
-router.get('/tickers/all', asyncMiddleware(async (req, res, next) => {
-    let exchange = new ccxt['bittrex']();
-    exchange.apiKey = process.env.BITTREX_APIKEY;
-    exchange.secret = process.env.BITTREX_APISECRET;
 
-    let tickers = await (exchange.fetchTickers ()) // all tickers indexed by their symbols
-    res.status(200).json(tickers);
+
+router.get('/tickers/all', asyncMiddleware(async (req, res, next) => {
+    const fetchTickersAll = require('../utils/ticker');
+    let tickersAll = await fetchTickersAll();
+    res.status(200).json(tickersAll);
 }));
 
 router.get('/tickers/top', asyncMiddleware(async (req, res, next) => {
