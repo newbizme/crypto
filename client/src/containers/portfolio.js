@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 
 import Auth from '../modules/auth';
 
-import Ticker from '../components/ticker';
+import Ticker from '../components/market/ticker';
 import AddTxn from '../components/portfolio/add-txn';
 import TxnsTable from '../components/portfolio/txns-table';
 import NetWorth from '../components/portfolio/net-worth';
@@ -56,6 +56,8 @@ class Home extends Component {
     console.log(this.props);
     return (
       <div className="home-container" style={styles.container}>
+        <Ticker ticker={this.props.ticker} />
+
         { !Auth.isUserAuthenticated() &&         
             <div style={{textAlign: 'center', color: 'green'}}>
             <Message success color='black'>
