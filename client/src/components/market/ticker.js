@@ -3,30 +3,37 @@ import { List, Grid, Icon } from 'semantic-ui-react';
 
 const s = {
     tickerContainer: {
+        width: '100%',
         color: '#fff',
-        marginTop: '-25px',
-        marginBottom: '15px',
+        margin: '-25px 0 20px 0',
         textAlign: 'center'
     },
     tickerItem: {
         display: 'inline-block',
-        // backgroundColor: 'rgba(255, 255, 255, .15)',
+        backgroundColor: '#333',
         textAlign: 'center',
-        padding: '5px 10px',
-        borderRadius: '5px'
+        width: '200px',
+        padding: '7px 0',
+        borderRadius: '2px',
+        margin: '1px'
     },
     name: {
         fontWeight: '700',
-        fontSize: '16px',
-        marginRight: '5px'
+        fontSize: '1.2em',
+        marginRight: '10px'
     },
     price: {
-        fontSize: '14px',
-        marginRight: '5px'
+        fontSize: '1em',
+        marginRight: '10px'
     },
     change: {
-        fontSize: '14px',
-        marginRight: '5px'
+        fontSize: '1em'
+    },
+    chevron: {
+        fontSize: '8px',
+        position: 'relative',
+        top: '-2px',
+        right: '-4px'
     }
 };
 
@@ -39,28 +46,26 @@ export default class Ticker extends Component {
         return items.map((item) => {
 
             let color = '';
-            item.change > 0 ? color = 'green' : color = 'red';
+            item.change > 0 ? color = '#21ba45' : color = 'red';
 
             return (
-                <Grid.Column>
                 <div style={s.tickerItem}>
                     <span style={s.name}>{item.name}</span>
                     <span style={s.price}>${item.price}</span>
                     <span style={s.change}>
                         <p style={{color: color, display: 'inline-block'}}>
-                        { item.change > 0 ? <Icon name='chevron up'/> : <Icon name='chevron down'/> }
+                        <Icon style={s.chevron} name={ item.change > 0 ? 'chevron up' : 'chevron down'}/>
                         { Math.abs(item.change) }%
                         </p>
                     </span>
                 </div>
-                </Grid.Column>
             )
         })
     }
 
     render() {
         if (this.props.ticker.length === 0) {
-            return <div>Loading ticker...</div>;
+            return <div style={s.tickerContainer}>Loading ticker...</div>;
         }
 
         const { ticker } = this.props;
@@ -76,9 +81,7 @@ export default class Ticker extends Component {
 
         return (
             <div style={s.tickerContainer}>
-                <Grid doubling columns={4}>
                 { this.renderTickerItems(items) }
-                </Grid>
             </div>
         );
     }
