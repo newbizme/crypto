@@ -2,6 +2,7 @@ import {
     RETURN_TXNS,
     RETURN_PORTFOLIO
 } from '../actions/portfolio';
+import { LOGOUT_USER } from '../actions/index';
 
 const initialState = {
     txns: [],
@@ -18,7 +19,8 @@ const portfolio = (state = initialState, action) => {
             return Object.assign({}, state, {
                 portfolio: action.payload
             });
-        
+        case LOGOUT_USER:
+            return Object.assign({}, initialState);
         
         default:
             return state

@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import {
+   logoutUser
+} from '../actions/index';
+
 import Auth from '../modules/auth';
 
-export default class Logout extends Component {
+class Logout extends Component {
     constructor(props) {
         super(props);
     }
     componentWillMount() {
+        this.props.logoutUser();
         let message = Auth.deauthenticateUser();
     }
 
@@ -20,3 +28,11 @@ export default class Logout extends Component {
         );
     }
 }
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ 
+      logoutUser
+    }, dispatch);
+  }
+
+export default connect(null, mapDispatchToProps)(Logout);

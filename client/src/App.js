@@ -34,7 +34,7 @@ class App extends Component {
           <TopNav />
 
           <Switch>
-            <Route exact path="/" component={Home}/>
+            <Route exact path="/" component={Portfolio}/>
             <Route exact path="/portfolio" component={Portfolio}/>
             <Route exact path="/market" component={Market}/>
             <Route exact path="/logout" component={Logout}/>

@@ -7,6 +7,15 @@ export const RETURN_CANDLESTICK_DATA = 'RETURN_CANDLESTICK_DATA';
 export const RETURN_EXCHANGE_SELECTION = 'RETURN_EXCHANGE_SELECTION';
 export const RETURN_CURRENCY_SELECTION = 'RETURN_CURRENCY_SELECTION';
 
+export const LOGOUT_USER = 'LOGOUT_USER';
+
+export function logoutUser() {
+    return {
+        type: LOGOUT_USER,
+        payload: true
+    };
+}
+
 
 export function updateServerStatus(status) {
     return {
