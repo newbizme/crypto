@@ -11,7 +11,7 @@ export function fetchTickers() {
     }
 }
 
-function returnTickers(data) {
+export function returnTickers(data) {
     return {
         type: RETURN_TICKERS,
         payload: data
