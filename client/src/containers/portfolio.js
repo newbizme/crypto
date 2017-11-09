@@ -64,7 +64,6 @@ class Portfolio extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div className="home-container" style={styles.container}>
         <Ticker ticker={this.props.ticker} />

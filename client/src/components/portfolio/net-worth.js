@@ -54,13 +54,11 @@ const NetWorth = (props) => {
         return <div></div>;
     }
 
-    console.log(props);    
     const i = props.portfolio.length -1;
     const holdings = props.portfolio[i];
-    console.log(holdings);
 
     const net = convertToUSD(props.ticker, holdings);
-    console.log(net);
+
     return (
         <div>
             <InvestmentRollup value={net.value} investment={net.investment} />

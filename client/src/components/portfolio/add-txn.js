@@ -19,9 +19,25 @@ const currencyPairs = [
     { key: 'BTC/USD', text: 'BTC/USD', value: 'BTC/USD' },
     { key: 'ETH/USD', text: 'ETH/USD', value: 'ETH/USD' },
     { key: 'ETH/BTC', text: 'ETH/BTC', value: 'ETH/BTC' },
+    { key: 'DASH/USD', text: 'DASH/USD', value: 'DASH/USD' },
+    { key: 'DASH/BTC', text: 'DASH/BTC', value: 'DASH/BTC' },
+    { key: 'DASH/ETH', text: 'DASH/ETH', value: 'DASH/ETH' },
     { key: 'GNT/ETH', text: 'GNT/ETH', value: 'GNT/ETH' },
     { key: 'GNT/BTC', text: 'GNT/BTC', value: 'GNT/BTC' },
+    { key: 'LTC/USD', text: 'LTC/USD', value: 'LTC/USD' },
+    { key: 'LTC/BTC', text: 'LTC/BTC', value: 'LTC/BTC' },
+    { key: 'LTC/ETH', text: 'LTC/ETH', value: 'LTC/ETH' },
+    { key: 'NEO/USD', text: 'NEO/USD', value: 'NEO/USD' },
+    { key: 'NEO/BTC', text: 'NEO/BTC', value: 'NEO/BTC' },
+    { key: 'NEO/ETH', text: 'NEO/ETH', value: 'NEO/ETH' },
+    { key: 'XMR/USD', text: 'XMR/USD', value: 'XMR/USD' },
+    { key: 'XMR/BTC', text: 'XMR/BTC', value: 'XMR/BTC' },
+    { key: 'XMR/ETH', text: 'XMR/ETH', value: 'XMR/ETH' },
+    { key: 'ZEC/USD', text: 'ZEC/USD', value: 'ZEC/USD' },
+    { key: 'ZEC/BTC', text: 'ZEC/BTC', value: 'ZEC/BTC' },
+    { key: 'ZEC/ETH', text: 'ZEC/ETH', value: 'ZEC/ETH' },
 ];
+
 const actionOptions = [
     { key: 'buy', text: 'Buy', value: 'buy' },
     { key: 'sell', text: 'Sell', value: 'sell' }
@@ -116,6 +132,9 @@ export default class AddTxn extends Component {
     }
 
     render() {
+        // const { ticker } = this.props;
+
+
         return (
             <div style={s.container}>
                 <Modal 
