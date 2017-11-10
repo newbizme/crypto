@@ -32,7 +32,7 @@ const getApiAndEmit = async socket => {
     // const res = await axios.get('https://crypto-bot-trm313.herokuapp.com/api/v1/tickers/all');
     // socket.emit("FromAPI", res.data);
     const tickers = await fetchTickersAll();
-    socket.emit("FromAPI", tickers);
+    io.sockets.emit("FromAPI", tickers);
   } catch (error) {
     console.error(`Error: ${error.code}`);
   }

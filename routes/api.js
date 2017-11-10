@@ -90,7 +90,7 @@ router.get('/exchanges/candlesticks/:name/:curr', asyncMiddleware(async (req, re
 }));
 
 
-
+// **PRODUCTION USE**
 router.get('/tickers/all', asyncMiddleware(async (req, res, next) => {
     const fetchTickersAll = require('../utils/ticker');
     let tickersAll = await fetchTickersAll();
@@ -112,5 +112,12 @@ router.get('/tickers/top', asyncMiddleware(async (req, res, next) => {
     res.status(200).json(data);
 }));
 
+
+// COIN MARKET CAP TABLE
+router.get('/market/snapshot', asyncMiddleware(async (req, res, next) => {
+    const fetchCMCTable = require('../utils/market-cmc');
+    let marketData = await fetchCMCTable();
+    res.status(200).json(marketData.data);
+}))
 
 module.exports = router;
