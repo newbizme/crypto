@@ -67,7 +67,6 @@ class Portfolio extends Component {
     return (
       <div className="home-container" style={styles.container}>
         <Ticker ticker={this.props.ticker} />
-
         { !Auth.isUserAuthenticated() &&         
             <div style={{textAlign: 'center', color: 'green'}}>
             <Message success color='black'>

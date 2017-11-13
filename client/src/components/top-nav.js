@@ -14,13 +14,18 @@ const TopNav = (props) => {
         <Menu icon='labeled' inverted>
 
             <Link to="/portfolio">
-            <Menu.Item name='gamepad' active={window.location.pathname === '/portfolio' }>
+            <Menu.Item active={window.location.pathname === '/portfolio' }>
                 <Icon name='pie chart' />
                 Portfolio
             </Menu.Item>
             </Link>
 
-
+            <Link to="/market">
+            <Menu.Item active={window.location.pathname === '/market' }>
+                <Icon name='line chart' />
+                Market
+            </Menu.Item>
+            </Link>
 
             <Menu.Menu position="right">
                 <Menu.Item>
