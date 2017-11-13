@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import socketIOClient from 'socket.io-client';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,7 +14,8 @@ import {
   } from '../actions/ticker';
 
 import {
-    fetchCMCTable
+    fetchCMCTable,
+    returnCMCTable
 } from '../actions/market';
 
 const styles = {
@@ -24,10 +26,13 @@ const styles = {
 
 class Market extends Component {
     componentDidMount() {
-        this.props.fetchCMCTable();
+        // this.props.fetchCMCTable();
+        const socket = socketIOClient();
+        socket.on("CapTable", data => this.props.returnCMCTable(data));
     }
 
     render() {
+        console.log(this.props.marketCap);
         return (
             <div className="market-container" style={styles.container}>
                 <MarketTable data={this.props.marketCap} />
@@ -49,7 +54,8 @@ function mapStateToProps({
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ 
     fetchTickers,
-    fetchCMCTable
+    fetchCMCTable,
+    returnCMCTable
     }, dispatch);
 }
 

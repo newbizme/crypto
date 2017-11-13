@@ -34,17 +34,32 @@ const getApiAndEmit = async socket => {
     const tickers = await fetchTickersAll();
     io.sockets.emit("FromAPI", tickers);
   } catch (error) {
-    console.error(`Error: ${error.code}`);
+    console.error(`getApiAndEmit>> Error: ${error.code}`);
   }
 };
 
+const fetchCapTable = require('../utils/market-cmc');
+let cmcData;
+const getCapAndEmit = async socket => {
+  try {
+    data = await fetchCapTable();
+    cmcData = data.data;
+    io.sockets.emit("CapTable", cmcData);
+  } catch (error) {
+    console.error(`getCapAndEmit>> Error: ${error.code}`);
+  }
+}
+
 let interval;
 io.on("connection", socket => {
-  if (interval) {
-    clearInterval(interval);
+  if (!cmcData) {
+    getCapAndEmit(socket);
   }
-  // interval = setInterval(() => getApiAndEmit(socket), 5000);
+  // Emit current state on new client connect
+  socket.emit("CapTable", cmcData);
+
   setInterval(() => getApiAndEmit(socket), 10000);
+  setInterval(() => getCapAndEmit(socket), 360000);
 
   socket.on("disconnect", () => {
   })
