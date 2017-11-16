@@ -136,89 +136,87 @@ export default class AddTxn extends Component {
 
 
         return (
-            <div style={s.container}>
-                <Modal 
-                    trigger={<Button 
-                                disabled={!Auth.isUserAuthenticated()}
-                                content='New Txn' 
-                                icon='add'
-                                labelPosition='left'
-                                positive
-                                onClick={this.handleOpen}>
-                            </Button>}
-                    open={this.state.modalOpen}
-                    onClose={this.handleCancel}
-                     
-                    size='small'>
-                    <Header icon='archive' content='Add New Transaction' />
-                    <Modal.Content>
-                        <Dropdown
-                            button floating labeled closeOnChange selection search
-                            className='icon'
-                            icon='exchange'
-                            options={currencyPairs}
-                            onChange={this.handleCurrencySelection.bind(this)}
-                            placeholder='Trading Pair'
+            <Modal 
+                trigger={<Button 
+                            disabled={!Auth.isUserAuthenticated()}
+                            content='New Txn' 
+                            icon='add'
+                            labelPosition='left'
+                            positive
+                            onClick={this.handleOpen}>
+                        </Button>}
+                open={this.state.modalOpen}
+                onClose={this.handleCancel}
+                    
+                size='small'>
+                <Header icon='archive' content='Add New Transaction' />
+                <Modal.Content>
+                    <Dropdown
+                        button floating labeled closeOnChange selection search
+                        className='icon'
+                        icon='exchange'
+                        options={currencyPairs}
+                        onChange={this.handleCurrencySelection.bind(this)}
+                        placeholder='Trading Pair'
+                    />
+                    <Dropdown
+                        button floating labeled closeOnChange selection
+                        className='icon'
+                        icon='currency'
+                        options={actionOptions}
+                        onChange={this.handleActionSelection.bind(this)}
+                        placeholder="Buy/Sell"
+                    />
+                    <br />
+                    <Input
+                        iconPosition='left'
+                        placeholder='Quantity'
+                        onChange={this.handleQuantityChange.bind(this)}
+                        >
+                        <Icon name='diamond' />
+                        <input />
+                    </Input>
+                    <Input
+                        iconPosition='left'
+                        placeholder='Exchange Price'
+                        onChange={this.handlePriceChange.bind(this)}
+                        >
+                        <Icon name='payment' />
+                        <input />
+                    </Input>
+                    <br />
+                    <DatePicker
+                        hintText="Trade Date"
+                        value={this.state.date}
+                        onChange={this.handleDateSelection}
+                        textFieldStyle={s.datetimePicker}
+                        style={s.datetimePicker}
                         />
-                        <Dropdown
-                            button floating labeled closeOnChange selection
-                            className='icon'
-                            icon='currency'
-                            options={actionOptions}
-                            onChange={this.handleActionSelection.bind(this)}
-                            placeholder="Buy/Sell"
+                    <TimePicker
+                        format="24hr"
+                        hintText="Trade Time"
+                        autoOk={true}
+                        value={this.state.time}
+                        onChange={this.handleTimeSelection}
+                        textFieldStyle={s.datetimePicker}
+                        style={s.datetimePicker}
                         />
-                        <br />
-                        <Input
-                            iconPosition='left'
-                            placeholder='Quantity'
-                            onChange={this.handleQuantityChange.bind(this)}
-                            >
-                            <Icon name='diamond' />
-                            <input />
-                        </Input>
-                        <Input
-                            iconPosition='left'
-                            placeholder='Exchange Price'
-                            onChange={this.handlePriceChange.bind(this)}
-                            >
-                            <Icon name='payment' />
-                            <input />
-                        </Input>
-                        <br />
-                        <DatePicker
-                            hintText="Trade Date"
-                            value={this.state.date}
-                            onChange={this.handleDateSelection}
-                            textFieldStyle={s.datetimePicker}
-                            style={s.datetimePicker}
-                            />
-                        <TimePicker
-                            format="24hr"
-                            hintText="Trade Time"
-                            autoOk={true}
-                            value={this.state.time}
-                            onChange={this.handleTimeSelection}
-                            textFieldStyle={s.datetimePicker}
-                            style={s.datetimePicker}
-                            />
 
-                        <Message 
-                            hidden={ this.state.error ? false : true }
-                            negative>
-                            <Message.Header>Please fill in all fields</Message.Header>
-                        </Message>
-                    </Modal.Content>
-                    <Modal.Actions>
-                    <Button basic color='red' inverted onClick={this.handleCancel}>
-                        <Icon name='remove' /> Cancel
-                    </Button>
-                    <Button color='green' inverted onClick={this.handleSave}>
-                        <Icon name='checkmark' /> Done
-                    </Button>
-                    </Modal.Actions>
-                </Modal>
-            </div>
+                    <Message 
+                        hidden={ this.state.error ? false : true }
+                        negative>
+                        <Message.Header>Please fill in all fields</Message.Header>
+                    </Message>
+                </Modal.Content>
+                <Modal.Actions>
+                <Button basic color='red' inverted onClick={this.handleCancel}>
+                    <Icon name='remove' /> Cancel
+                </Button>
+                <Button color='green' inverted onClick={this.handleSave}>
+                    <Icon name='checkmark' /> Done
+                </Button>
+                </Modal.Actions>
+            </Modal>
         )
     }
 }

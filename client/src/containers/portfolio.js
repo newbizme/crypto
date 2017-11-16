@@ -8,6 +8,7 @@ import Auth from '../modules/auth';
 
 import Ticker from '../components/market/ticker';
 import AddTxn from '../components/portfolio/add-txn';
+import ImportTxn from '../components/portfolio/import-txn';
 import TxnsTable from '../components/portfolio/txns-table';
 import NetWorth from '../components/portfolio/net-worth';
 
@@ -18,7 +19,10 @@ import { Button, Message, Icon } from 'semantic-ui-react';
 import { 
   addTxn,
   fetchTxns,
-  deleteTxn
+  deleteTxn,
+  addExchangeConnection,
+  fetchExchangeConnections,
+  deleteExchangeConnection
 } from '../actions/portfolio';
 
 import {
@@ -35,6 +39,7 @@ const styles = {
 class Portfolio extends Component {
   componentWillMount() {
     this.props.fetchTickers();
+    Auth.isUserAuthenticated() && this.props.fetchExchangeConnections();
   }
 
   componentDidMount() {
@@ -83,6 +88,20 @@ class Portfolio extends Component {
         <NetWorth ticker={this.props.ticker} portfolio={this.props.portfolio.portfolio} />
         <br/>
         <AddTxn addTxn={this.props.addTxn} />
+        <ImportTxn
+            userExchanges={this.props.userExchanges}
+            addExchange={this.props.addExchangeConnection}
+            deleteExchange={this.props.deleteExchangeConnection}
+             />
+        <Button 
+            disabled={!Auth.isUserAuthenticated()}
+            content='Refresh' 
+            icon='refresh'
+            labelPosition='left'
+            positive
+            floated='right'
+            >
+        </Button>
         <TxnsTable 
           deleteTxn={this.props.deleteTxn}
           txns={this.props.portfolio.txns} />
@@ -95,13 +114,15 @@ function mapStateToProps({
     serverStatus,
     exchangeData,
     portfolio,
-    ticker
+    ticker,
+    userExchanges
   }) {
   return { 
     serverStatus,
     exchangeData,
     portfolio,
-    ticker
+    ticker,
+    userExchanges
   };
 }
 
@@ -111,7 +132,10 @@ function mapDispatchToProps(dispatch) {
     fetchTxns,
     deleteTxn,
     fetchTickers,
-    returnTickers
+    returnTickers,
+    addExchangeConnection,
+    fetchExchangeConnections,
+    deleteExchangeConnection
   }, dispatch);
 }
 

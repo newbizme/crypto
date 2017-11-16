@@ -16,7 +16,7 @@
     "axios": "^0.16.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "~1.17.1",
-    "ccxt": "^1.9.250",
+    "ccxt": "^1.10.123",
     "client-sessions": "^0.8.0",
     "concurrently": "^3.4.0",
     "cookie-parser": "~1.4.3",
