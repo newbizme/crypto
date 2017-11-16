@@ -154,24 +154,6 @@ router.get('/txns/api/:name', asyncMiddleware(async (req, res, next) => {
     });
     */
 
-    const keys = {
-        poloniex: {
-            apikey: 'U7UN9H0X-AAVF187L-Q78XRLLB-ANA13T3O',
-            apisecret: '333b391d4be19cb92c6b983f1011576ec1bc959ed37318d346a79e1b3adf425a35ce10aaab20accefd34c507f4730e2d37e9451b196c0a33229e83aef0501aec',
-            password: undefined
-        },
-        gdax: {
-            apikey: '1674e70b483c358a6ebcaeaf0714898d',
-            apisecret: 'ks0JG12vTiaGwCeV9ckOuLK26eUN76RYhVzlyZtb04G+F/7dDnkyfGK6O4JpFq5nn/bv2+eUxDKMYUpDxmkXzQ==',
-            password: 'p8927n2ng5'
-        },
-        bittrex: {
-            apikey: 'd38580cf13444b9cb08b68e5b62eae81 ',
-            apisecret: '16468c86ec224a879f0e860eb80d8bbf',
-            password: undefined
-        }
-    };
-
     let txns = [];
     // for keys ...
 
