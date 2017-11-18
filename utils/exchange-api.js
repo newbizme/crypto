@@ -8,6 +8,8 @@ const ccxt = require('ccxt');
 // +++++++    RETURN TRADES
 // ++++++++++++++++++++++++++++++++
 
+const hasFetchTradesUnifiedAPI = ['poloniex', 'kraken', 'binance', 'cryptopia', 'dsx', 'liqui', 'tidex', 'wex', 'yobit'];
+
 async function fetchTrades(name, apikey, apisecret, password) {
     let exchange = new ccxt[name]();
     exchange.apiKey = apikey;
@@ -20,7 +22,7 @@ async function fetchTrades(name, apikey, apisecret, password) {
 
     let accounts;
 
-    if (name === 'poloniex') {
+    if (hasFetchTradesUnifiedAPI.includes(name)) {
         // Poloniex - exchange API
         // depsWiths = await exchange.privatePostReturnDepositsWithdrawals({start: 1493596800, end: 1510701542 });
         // tradeHistory = await exchange.privatePostReturnTradeHistory({currencyPair: 'all', start: 1493596800, end: 1510701542});
