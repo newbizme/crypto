@@ -8,11 +8,11 @@ const ccxt = require('ccxt');
 // +++++++    RETURN TRADES
 // ++++++++++++++++++++++++++++++++
 
-async function fetchTrades(exchangeName, keyObj) {
-    let exchange = new ccxt[exchangeName]();
-    exchange.apiKey = keyObj.apikey;
-    exchange.secret = keyObj.apisecret;
-    exchange.password = keyObj.password;
+async function fetchTrades(name, apikey, apisecret, password) {
+    let exchange = new ccxt[name]();
+    exchange.apiKey = apikey;
+    exchange.secret = apisecret;
+    exchange.password = password;
 
     let trades;
     let depsWiths;
@@ -20,7 +20,7 @@ async function fetchTrades(exchangeName, keyObj) {
 
     let accounts;
 
-    if (exchangeName === 'poloniex') {
+    if (name === 'poloniex') {
         // Poloniex - exchange API
         // depsWiths = await exchange.privatePostReturnDepositsWithdrawals({start: 1493596800, end: 1510701542 });
         // tradeHistory = await exchange.privatePostReturnTradeHistory({currencyPair: 'all', start: 1493596800, end: 1510701542});
@@ -29,13 +29,16 @@ async function fetchTrades(exchangeName, keyObj) {
 
         try {
             trades = await exchange.fetchMyTrades(symbol = undefined, since = undefined, limit = undefined, params = {currencyPair: 'all', start: 1493596800, end: 1510701542});
-            console.log(trades);
-        } catch (e) {
-            console.error(e);
+            // add key 'exchange' with exchange name
+            trades.map(t => t.exchange = name);
+            return trades;
+        } catch (err) {
+            console.error(err);
+            return err;
         }
         
-        console.log(trades);
-    } else if (exchangeName === 'gdax') {
+
+    } else if (name === 'gdax') {
         // accounts = await exchange.privateGetAccounts();
         let accHistory = [];
         // GDAX doc: https://docs.gdax.com/#get-account-history 
@@ -43,7 +46,6 @@ async function fetchTrades(exchangeName, keyObj) {
 
     }
 
-    return trades;
 }
 
 

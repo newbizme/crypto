@@ -6,23 +6,10 @@ import { Button, Header, Icon, Modal, Dropdown,
 
 import Auth from '../../modules/auth';
 
-const exchangeInfo = {
-    poloniex: {
-        passphrase: false
-    },
-    bittrex: {
-        passphrase: true
-    }
-};
-
 const acceptedExchanges = [
+    { key: 'binance', text: 'Binance', value: 'binance' },
+    { key: 'kraken', text: 'Kraken', value: 'kraken' },
     { key: 'poloniex', text: 'Poloniex', value: 'poloniex' },
-    { key: 'bittrex', text: 'Bittrex', value: 'bittrex' }
-];
-
-const userExchanges = [
-    { _id: '234326235234', name: 'Poloniex', created: '2017-11-12', apiKey: '9334asdf23asdf23'}, 
-    { _id: '72343246234', name: 'Gdax', created: '2017-11-09', apiKey: '23423d-23kdsf2-asdf342'}
 ];
 
 const s = {
@@ -57,6 +44,7 @@ export default class ImportTxn extends Component {
         // ... 
 
         this.setState({ modalOpen: false })
+        this.props.onRefresh();
     }
 
     handleExchangeSelection = (e, data) => {

@@ -92,6 +92,7 @@ class Portfolio extends Component {
             userExchanges={this.props.userExchanges}
             addExchange={this.props.addExchangeConnection}
             deleteExchange={this.props.deleteExchangeConnection}
+            onRefresh={this.props.fetchTxns}
              />
         <Button 
             disabled={!Auth.isUserAuthenticated()}
@@ -100,6 +101,7 @@ class Portfolio extends Component {
             labelPosition='left'
             positive
             floated='right'
+            onClick={this.props.fetchTxns}
             >
         </Button>
         <TxnsTable 

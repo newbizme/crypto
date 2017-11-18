@@ -24,6 +24,12 @@ router.get('/exchanges', (req, res) => {
     res.status(200).json(ccxt.exchanges);
 })
 
+router.get('/symbols/:exchange', asyncMiddleware ( async (req, res, next) => {
+    let exchange = new ccxt[req.params.exchange]();
+    let markets = await exchange.loadMarkets();
+    res.status(200).json(markets);
+}));
+
 router.get('/exchange/info/:name', asyncMiddleware(async (req, res, next) => {
     let exchange = new ccxt[req.params.name]();
 

@@ -22,34 +22,77 @@ const router = new express.Router();
 // ++++++++++++++++++++++++++++++++
 // +++++++    MANUAL INPUT
 // ++++++++++++++++++++++++++++++++
-// ~~~ GET MANUAL TXNS
-router.get('/txns', (req, res) => {
-    Txn.find({ userID: req.userID }, function (err, txns) {
-        if (err) return res.status(500).send({error: err});
 
-        // Sort txns by timestamp
-        txns.sort(function(txn1, txn2) {
-            // Ascending
-            return txn1.timestamp - txn2.timestamp
-        })
+// ~~~ GET ALL TXNS - MANUAL AND API
+// !!! PRODUCTION
+router.get('/txns', asyncMiddleware(async (req, res, next) => {
 
-        let portfolio = returnPortfolioTimeline(txns);
-        res.status(200).json({ txns: txns, portfolio: portfolio });
-    });
-});
+    // ~ GET MANUAL TXNS
+    async function getManualTxnsPromise(userID) {
+        var txns = Txn.find({ userID: userID }).exec();
+        return txns;
+    }
+
+    // ~~~ GET EXCHANGE TXNS
+    var ex = require('../utils/exchange-api');
+
+    // Find exchange API keys
+    async function getKeysPromise(userID) {
+        var keys = ExchangeKey.find({ userID: userID }).exec();
+        return keys;
+    }
+    async function mapKeys(keys) {
+        let txns = [];
+        await Promise.all(keys.map(async (key) => {
+            !key.password ? key.password = undefined : '';
+            let txnList = await ex.fetchTrades(key.exchange, key.apikey, key.apisecret, key.password);
+            txns = txns.concat(txnList);
+        }))
+        return txns;
+    }
+
+    let keys = await getKeysPromise(req.userID);
+    let apitxns = await mapKeys(keys);
+    let manualtxns = await getManualTxnsPromise(req.userID);
+
+    let txns = manualtxns.concat(apitxns);
+
+    // Sort txns by timestamp
+    txns.sort(function(txn1, txn2) {
+        // Ascending
+        return txn1.timestamp - txn2.timestamp
+    })
+
+    let portfolio = await returnPortfolioTimeline(txns);
+
+    res.status(200).json({ txns: txns, portfolio: portfolio });
+
+}));
 
 // ~~~ ADD MANUAL TXN
+// !!! PRODUCTION
 router.post('/txns', (req, res) => {
     let txn = req.body;
+    /*
+        'id':        '12345-67890:09876/54321', // string trade id
+        'timestamp':  1502962946216,            // Unix timestamp in milliseconds
+        'datetime':  '2017-08-17 12:42:48.000', // ISO8601 datetime with milliseconds
+        'symbol':    'ETH/BTC',                 // symbol
+        'order':     '12345-67890:09876/54321', // string order id or undefined/None/null
+        'type':      'limit',                   // order type, 'market', 'limit' or undefined/None/null
+        'side':      'buy',                     // direction of the trade, 'buy' or 'sell'
+        'price':      0.06917684,               // float price in quote currency
+        'amount':     1.5,                      // amount of base currency
+    */
     var submission = new Txn({
         userID: req.userID,
         timestamp: txn.timestamp,
-        action: txn.action,
-        currency: txn.currency,
-        base: txn.base,
-        quantity: txn.quantity,
+        datetime: txn.datetime,
+        side: txn.side,
+        symbol: txn.symbol,
         price: txn.price,
-        created: txn.created
+        amount: txn.amount,
+        exchange: txn.exchange
     });
 
     submission.save(function (err, data) {
@@ -60,6 +103,7 @@ router.post('/txns', (req, res) => {
 });
 
 // ~~~ DELETE MANUAL TXN
+// !!! PRODUCTION
 router.delete('/txns/:id', (req, res) => {
     var id = req.params.id;
 
@@ -74,6 +118,7 @@ router.delete('/txns/:id', (req, res) => {
 // ++++++++++++++++++++++++++++++++
 
 // ~~~ GET EXCHANGE KEYS
+// !!! PRODUCTION
 router.get('/auth/exchange', (req, res) => {
     ExchangeKey.find({ userID: req.userID }, function (err, keys) {
         if (err) return res.status(500).send({error: err});
@@ -89,6 +134,7 @@ router.get('/auth/exchange', (req, res) => {
 });
 
 // ~~~ ADD EXCHANGE KEYS
+// !!! PRODUCTION
 router.post('/auth/exchange', (req, res) => {
     let key = req.body;
     console.log(key);
@@ -96,6 +142,10 @@ router.post('/auth/exchange', (req, res) => {
     key.password ? password = key.password : password = undefined;
     key.created = new Date();
 
+    // Delete duplicates
+    ExchangeKey.find({ userID: req.userID, exchange: key.exchange }).remove().exec();
+
+    // Compile new key
     var submission = new ExchangeKey({
         userID: req.userID,
         password: key.password,
@@ -105,6 +155,7 @@ router.post('/auth/exchange', (req, res) => {
         created: key.created
     });
 
+    // Save new key
     submission.save(function (err, data) {
         if (err) return res.status(500).send({error: err});
         console.log(data);
@@ -113,6 +164,7 @@ router.post('/auth/exchange', (req, res) => {
 })
 
 // ~~~ DELETE EXCHANGE KEYS
+// !!! PRODUCTION
 router.delete('/auth/exchange/:id', (req, res) => {
     var id = req.params.id;
 
@@ -123,6 +175,7 @@ router.delete('/auth/exchange/:id', (req, res) => {
 });
 
 // ~~~ TEST EXCHANGE KEYS
+// !!! PRODUCTION
 router.post('/auth/test', asyncMiddleware(async (req, res, next) => {
     let key = req.body;
     !key.password ? key.password = undefined : '';
@@ -139,38 +192,34 @@ router.post('/auth/test', asyncMiddleware(async (req, res, next) => {
 
 // ~~~ FETCH TXNS FROM EXCHANGE
 // testing --> This should really start living in the get.('txn') endpoint to collect all txns (manual and auto) at once
-router.get('/txns/api/:name', asyncMiddleware(async (req, res, next) => {
-    if (req.params.name !== 'gdax' 
-        && req.params.name !== 'poloniex'
-        && req.params.name !== 'bittrex') 
-    {
-        
-        res.end();
+router.get('/txns/api', asyncMiddleware(async (req, res, next) => {
+
+    // ~~~ GET EXCHANGE TXNS
+    var ex = require('../utils/exchange-api');
+
+    async function getKeysPromise(userID) {
+        var keys = ExchangeKey.find({ userID: userID }).exec();
+        return keys;
     }
 
-    /*
-    ExchangeKey.find({ userID: req.userID }, function (err, keys) {
-        if (err) return res.status(500).send({error: err});
-    });
-    */
+    async function mapKeys(keys) {
+        let txns = [];
 
-    let txns = [];
-    // for keys ...
+        await Promise.all(keys.map(async (key) => {
+            !key.password ? key.password = undefined : '';
+            let txnList = await ex.fetchTrades(key.exchange, key.apikey, key.apisecret, key.password);
+            txns = txns.concat(txnList);
+        }))
 
-    /* // Migrated to exchange-api function set 
-    let exchange = new ccxt[req.params.name]();
-    exchange.apiKey = keys[req.params.name].apiKey
-    exchange.secret = keys[req.params.name].secret
-    exchange.password = keys[req.params.name].password
-    let trades = await exchange.fetchMyTrades(symbol = undefined, since = undefined, limit = undefined, params = {currencyPair: 'all', start: 1493596800, end: 1510701542});
-    console.log(trades);
-    */
+        return txns;
+    }
 
-    var ex = require('../utils/exchange-api');
-    let trades = await ex.fetchTrades(req.params.name, keys[req.params.name]);
-    console.log('return trades > poloniex');
-    res.status(200).json(trades);
-
+    getKeysPromise(req.userID).then(async (response) => {
+        let txns = await mapKeys(response)
+        console.log('txns:', txns);
+        res.status(200).json(txns);
+    })    
+    
 }));
 
 // =========================================================================
@@ -178,12 +227,28 @@ router.get('/txns/api/:name', asyncMiddleware(async (req, res, next) => {
 // =========================================================================
 
 // ~~~ INPUT=TXNS, OUTPUT=PORTFOLIO
+// !!! PRODUCTION
 function returnPortfolioTimeline(txns) {
     let p = [];
 
     txns.map((txn, index) => {
+    /*
+        'id':        '12345-67890:09876/54321', // string trade id
+        'timestamp':  1502962946216,            // Unix timestamp in milliseconds
+        'datetime':  '2017-08-17 12:42:48.000', // ISO8601 datetime with milliseconds
+        'symbol':    'ETH/BTC',                 // symbol
+        'order':     '12345-67890:09876/54321', // string order id or undefined/None/null
+        'type':      'limit',                   // order type, 'market', 'limit' or undefined/None/null
+        'side':      'buy',                     // direction of the trade, 'buy' or 'sell'
+        'price':      0.06917684,               // float price in quote currency
+        'amount':     1.5,                      // amount of base currency
+    */
         let i = 1;
-        txn.action === 'buy' ? i = 1 : i = -1;
+        txn.side === 'buy' ? i = 1 : i = -1;
+
+        let coin = txn.symbol.split('/');
+        const currency = coin[0];
+        const base = coin[1];
         
         // Use Object.assign() to generate a copy of an object instead of a reference
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign 
@@ -191,29 +256,30 @@ function returnPortfolioTimeline(txns) {
         if (index === 0) {
             
             // handle first transaction
-            data.timestamp = txn.timestamp;
-            data[txn.currency] = i * txn.quantity;
-            data[txn.base] = -1 * i * txn.quantity * txn.price;
+            data.datetime = txn.datetime;
+            data[currency] = i * txn.amount;
+            data[base] = -1 * i * txn.amount * txn.price;
         } else {
             data = Object.assign({}, p[index-1])
-            data.timestamp = txn.timestamp;
+            data.datetime = txn.datetime;
             
             // validate if object key for the currency exists
-            if (txn.currency in data) {
-                data[txn.currency] += i * txn.quantity;
+            if (currency in data) {
+                data[currency] += i * txn.amount;
             } else {
-                data[txn.currency] = i * txn.quantity;
+                data[currency] = i * txn.amount;
             }
             // validate if the object key for the base exists
-            if (txn.base in data) {
-                data[txn.base] -= (i * txn.quantity * txn.price);
+            if (base in data) {
+                data[base] -= (i * txn.amount * txn.price);
             } else {
-                data[txn.base] = -1 * i * txn.quantity * txn.price;
+                data[base] = -1 * i * txn.amount * txn.price;
             }
         }
         p.push(data);
     })
 
+    console.log(p);
     return p;
 }
 

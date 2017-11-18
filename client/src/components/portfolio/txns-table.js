@@ -15,20 +15,40 @@ export default class TxnsTable extends Component {
         })
 
         return txns.map((txn) => {
+    /*
+        'id':        '12345-67890:09876/54321', // string trade id
+        'timestamp':  1502962946216,            // Unix timestamp in milliseconds
+        'datetime':  '2017-08-17 12:42:48.000', // ISO8601 datetime with milliseconds
+        'symbol':    'ETH/BTC',                 // symbol
+        'order':     '12345-67890:09876/54321', // string order id or undefined/None/null
+        'type':      'limit',                   // order type, 'market', 'limit' or undefined/None/null
+        'side':      'buy',                     // direction of the trade, 'buy' or 'sell'
+        'price':      0.06917684,               // float price in quote currency
+        'amount':     1.5,                      // amount of base currency
+    */
             return (
                 <Table.Row>
-                    <Table.Cell>{ txn.timestamp }</Table.Cell>
-                    <Table.Cell>{ txn.currency + '/' + txn.base }</Table.Cell>
-                    <Table.Cell>{txn.action}</Table.Cell>
-                    <Table.Cell>{txn.quantity}</Table.Cell>
-                    <Table.Cell>{txn.price}</Table.Cell>
+                    <Table.Cell>{ txn.datetime }</Table.Cell>
+                    <Table.Cell>{ txn.symbol }</Table.Cell>
+                    <Table.Cell>{txn.side}</Table.Cell>
+                    <Table.Cell>{txn.amount}</Table.Cell>
+                    <Table.Cell>{txn.price} {txn.symbol.split('/')[1]}</Table.Cell>
+                    <Table.Cell>{txn.exchange}</Table.Cell>
                     <Table.Cell>
+                        { txn.hasOwnProperty('order') ?  
+                        <Button 
+                            icon='exchange'
+                            primary
+                            disabled
+                            />
+                        :
                         <Button 
                             icon='trash'
                             negative
                             onClick={this.deleteTxn.bind(this, txn)}
                             >
                         </Button>
+                        }
                     </Table.Cell>
                 </Table.Row>
             );
@@ -51,6 +71,7 @@ export default class TxnsTable extends Component {
                             <Table.HeaderCell>Action</Table.HeaderCell>
                             <Table.HeaderCell>Quantity</Table.HeaderCell>
                             <Table.HeaderCell>Price</Table.HeaderCell>
+                            <Table.HeaderCell>Exchange</Table.HeaderCell>
                             <Table.HeaderCell></Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
