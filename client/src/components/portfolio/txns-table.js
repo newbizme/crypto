@@ -35,7 +35,7 @@ export default class TxnsTable extends Component {
                     <Table.Cell>{txn.price} {txn.symbol.split('/')[1]}</Table.Cell>
                     <Table.Cell>{txn.exchange}</Table.Cell>
                     <Table.Cell>
-                        { txn.hasOwnProperty('order') ?  
+                        { txn.hasOwnProperty('info') ?  
                         <Button 
                             icon='exchange'
                             primary

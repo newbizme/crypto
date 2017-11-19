@@ -96,6 +96,8 @@ async function testConnection(name, apikey, apisecret, password) {
     if (password) {
         exchange.password = password
     }
+
+    exchange.nonce = await function () { return exchange.milliseconds() }
     
     let status = false;
 

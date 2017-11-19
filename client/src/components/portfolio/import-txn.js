@@ -8,6 +8,7 @@ import Auth from '../../modules/auth';
 
 const acceptedExchanges = [
     { key: 'binance', text: 'Binance', value: 'binance' },
+    { key: 'gemini', text: 'Gemini', value: 'gemini' },
     { key: 'kraken', text: 'Kraken', value: 'kraken' },
     { key: 'poloniex', text: 'Poloniex', value: 'poloniex' },
 ];
