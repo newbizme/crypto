@@ -46,6 +46,40 @@ async function fetchTrades(name, apikey, apisecret, password) {
         // GDAX doc: https://docs.gdax.com/#get-account-history 
         // The route includes the accountIds.. 
 
+    } else if (name === 'gemini') {
+        // https://docs.gemini.com/rest-api/#get-past-trades
+
+        let markets = await exchange.loadMarkets(); // obj.symbol = 'BTC/USD'
+        trades = [];
+        
+        for (var m in markets) {
+            // Update Nonce or else will be rate limited to one private call per second
+            exchange.nonce = await function () { return exchange.milliseconds() }
+
+            let market = exchange.market(markets[m].symbol);
+            console.log(m);
+            let txns = await exchange.privatePostMytrades(exchange.extend({
+                timestamp: 0,
+                limit_trades: 500, 
+                symbol: markets[m].symbol.split('/').join('').toLowerCase()
+            }))
+            // TODO: Properly map through the responses
+                    /*
+                if (trades.length > 499) {
+                    trades = trades.concat( await this.privatePostMytrades(this.extend({ 
+                        timestamp: trades[0].timestamp + 1, 
+                        limit_trades: 500 
+                    })));
+                }
+                */
+
+            let txnList = await exchange.parseTrades(txns, market)
+            console.log(txnList);
+            trades = trades.concat(txnList);
+        }
+
+        trades.map(t => t.exchange = name);
+        return trades;
     }
 
 }

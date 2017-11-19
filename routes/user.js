@@ -222,6 +222,22 @@ router.get('/txns/api', asyncMiddleware(async (req, res, next) => {
     
 }));
 
+// TEST - Endpoint to test connections to new exchanges
+router.get('/test/api', asyncMiddleware( async (req, res, next) => {
+    var ex = require('../utils/exchange-api');
+
+    const key = {
+        exchange: 'gemini',
+        apikey: process.env.GEMINI_APIKEY,
+        apisecret: process.env.GEMINI_SECRET,
+        password: process.env.GEMINI_PASSPHRASE
+    }
+
+    let txnList = await ex.fetchTrades(key.exchange, key.apikey, key.apisecret, key.password);
+    console.log('return:', txnList);
+    res.status(200).json(txnList);
+}))
+
 // =========================================================================
 // ++++++++             PORTFOLIO FUNCTIONS
 // =========================================================================
