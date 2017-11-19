@@ -5,6 +5,7 @@ import exchangeData from './exchange-data';
 import portfolio from './portfolio';
 import ticker from './ticker';
 import marketCap from './market-cap';
+import userExchanges from './user-exchanges';
 
 
 const rootReducer = combineReducers({
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     exchangeData,
     portfolio,
     ticker,
-    marketCap
+    marketCap,
+    userExchanges
 });
 
 export default rootReducer;

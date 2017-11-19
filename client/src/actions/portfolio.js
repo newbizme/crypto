@@ -3,10 +3,13 @@ import Auth from '../modules/auth';
 
 export const RETURN_TXNS = 'RETURN_TXNS';
 export const RETURN_PORTFOLIO = 'RETURN_PORTFOLIO';
+export const RETURN_EXCHANGE_CONNECTIONS = 'RETURN_EXCHANGE_CONNECTIONS';
 
 // *****************************
 // TRANSACTION FUNCTIONS
 // *****************************
+
+// MANUAL TRANSACTIONS
 
 export function addTxn(txn) {
     return (dispatch, getState) => {
@@ -42,6 +45,63 @@ export function deleteTxn(id) {
             })
     }
 }
+
+// IMPORT TRANSACTIONS
+
+export function fetchExchangeConnections() {
+    return (dispatch, getState) => {
+        var config = {
+            headers: {'Authorization': `bearer ${Auth.getToken()}`}
+        };
+        axios.get('/user/v1/auth/exchange', config)
+            .then((response) => {
+                dispatch (returnExchangeConnections(response.data));
+            })
+    }
+};
+
+function returnExchangeConnections(exchanges) {
+    return {
+        type: RETURN_EXCHANGE_CONNECTIONS,
+        payload: exchanges
+    }
+};
+
+export function addExchangeConnection(exchange) {
+    return (dispatch, getState) => {
+        console.log('AddExchangeConnection', exchange);
+        var config = {
+            headers: {'Authorization': `bearer ${Auth.getToken()}`}
+        };
+    
+        axios.post('/user/v1/auth/exchange', exchange, config)
+            .then((response) => {
+                console.log('Add>response',response);
+                dispatch(fetchExchangeConnections());
+            })
+            .catch((error) => {
+                
+            })
+    }
+}
+
+export function deleteExchangeConnection(id) {
+    return (dispatch, getState) => {
+        var config = {
+            headers: {'Authorization': `bearer ${Auth.getToken()}`}
+        };
+        axios.delete('/user/v1/auth/exchange/' + id, config)
+            .then((response) => {
+                dispatch(fetchExchangeConnections());
+            })
+            .catch((error) => {
+                console.error('Error:',error);
+            })
+    }
+}
+
+
+// FETCHING TRANSACTIONS
 
 export function fetchTxns() {
     return (dispatch, getState) => {

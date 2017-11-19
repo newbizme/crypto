@@ -24,6 +24,18 @@ router.get('/exchanges', (req, res) => {
     res.status(200).json(ccxt.exchanges);
 })
 
+router.get('/symbols/:exchange', asyncMiddleware ( async (req, res, next) => {
+    let exchange = new ccxt[req.params.exchange]();
+    let markets = await exchange.loadMarkets();
+    res.status(200).json(markets);
+}));
+
+router.get('/exchange/info/:name', asyncMiddleware(async (req, res, next) => {
+    let exchange = new ccxt[req.params.name]();
+
+    res.status(200).json(exchange);
+}))
+
 router.get('/exchanges/:name', asyncMiddleware(async (req, res, next) => {
     // Validate given exchange name
     let exchanges = ccxt.exchanges;
@@ -63,6 +75,7 @@ router.get('/exchanges/:name', asyncMiddleware(async (req, res, next) => {
 
 }));
 
+/*
 router.get('/exchanges/candlesticks/:name/:curr', asyncMiddleware(async (req, res, next) => {
     // '/api/v1/exchanges/candlesticks/gdax/ETH-USD'
     let exchange = new ccxt[req.params.name];
@@ -71,6 +84,42 @@ router.get('/exchanges/candlesticks/:name/:curr', asyncMiddleware(async (req, re
     let markets = await exchange.loadMarkets();
 
     let candlesticks = await exchange.fetchOHLCV(curr, '1h');
+    let candleData = [];
+
+    const parseDate = timeParse("%Q");
+
+    candlesticks.reverse().map((c) => {
+        candleData.push({
+            date: new Date(c[0]),
+            open: c[1],
+            high: c[2],
+            low: c[3],
+            close: c[4],
+            volume: c[5]
+        })
+    })
+    
+    res.status(200).json(candleData);
+}));
+*/
+
+router.get('/exchanges/candlesticks/:exchange/:curr', asyncMiddleware(async (req, res, next) => {
+    // '/api/v1/exchanges/candlesticks?timeframe=1h&since=<?>&limit=<?>'
+    let exchange = new ccxt[req.params.exchange];
+    let curr = req.params.curr.toUpperCase().replace("-","/");
+    let markets = await exchange.loadMarkets();
+
+    let timeframe = undefined; // not all will have everything -- client-side will need to identify exchange.timeframes available
+
+
+    let since = undefined;
+    let limit = undefined;
+    req.query.timeframe ? timeframe = req.query.timeframe : timeframe = undefined;
+    req.query.since ? since = req.query.since : since = undefined;
+    req.query.limit ? limit = req.query.limit : limit = undefined;
+
+
+    let candlesticks = await exchange.fetchOHLCV(curr, timeframe, since, limit);
     let candleData = [];
 
     const parseDate = timeParse("%Q");
@@ -119,5 +168,42 @@ router.get('/market/snapshot', asyncMiddleware(async (req, res, next) => {
     let marketData = await fetchCMCTable();
     res.status(200).json(marketData.data);
 }))
+
+
+/* PORTFOLIO HOLDINGS STREAMS */
+router.get('/portfolio/streams', asyncMiddleware(async (req, res, next) => {
+    // '/api/v1/exchanges/candlesticks?coins=BTC-USD,ETH-USD,ETH-BTC
+    let exchange = new ccxt['bittrex'];
+    let curr = req.params.curr.toUpperCase().replace("-","/");
+    let markets = await exchange.loadMarkets();
+
+    let timeframe = undefined; // not all will have everything -- client-side will need to identify exchange.timeframes available
+
+
+    let since = undefined;
+    let limit = undefined;
+    req.query.timeframe ? timeframe = req.query.timeframe : timeframe = undefined;
+    req.query.since ? since = req.query.since : since = undefined;
+    req.query.limit ? limit = req.query.limit : limit = undefined;
+
+
+    let candlesticks = await exchange.fetchOHLCV(curr, timeframe, since, limit);
+    let candleData = [];
+
+    const parseDate = timeParse("%Q");
+
+    candlesticks.reverse().map((c) => {
+        candleData.push({
+            date: new Date(c[0]),
+            open: c[1],
+            high: c[2],
+            low: c[3],
+            close: c[4],
+            volume: c[5]
+        })
+    })
+    
+    res.status(200).json(candleData);
+}));
 
 module.exports = router;
