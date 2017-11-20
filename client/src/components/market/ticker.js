@@ -34,6 +34,10 @@ const s = {
         position: 'relative',
         top: '-2px',
         right: '-4px'
+    },
+    logoSpace: {
+        display: 'inline-block',
+        fontSize: '20px'
     }
 };
 
@@ -47,9 +51,12 @@ export default class Ticker extends Component {
 
             let color = '';
             item.change > 0 ? color = '#21ba45' : color = 'red';
-
+            console.log(item);
             return (
                 <div style={s.tickerItem}>
+                    <div style={s.logoSpace}>
+                        <i style={s.logo} className={ 'cc ' + item.name } title={ item.name }></i>
+                    </div>
                     <span style={s.name}>{item.name}</span>
                     <span style={s.price}>${item.price}</span>
                     <span style={s.change}>

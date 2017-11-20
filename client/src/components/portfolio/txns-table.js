@@ -9,10 +9,12 @@ export default class TxnsTable extends Component {
     renderTxns = () => {
         let txns = this.props.txns;
         // FIXIT: Sort Descending
+        /*
         txns.sort(function(txn1, txn2) {
             // Descending
             return txn2.timestamp - txn1.timestamp
         })
+        */
 
         return txns.map((txn) => {
     /*

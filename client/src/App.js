@@ -4,6 +4,7 @@ import './App.css';
 
 import Home from './containers/home';
 import Market from './containers/market';
+import Analysis from './containers/analysis';
 import Portfolio from './containers/portfolio';
 import LoginPage from './containers/login-page';
 import SignUpPage from './containers/sign-up-page';
@@ -37,6 +38,7 @@ class App extends Component {
             <Route exact path="/" component={Portfolio}/>
             <Route exact path="/portfolio" component={Portfolio}/>
             <Route exact path="/market" component={Market}/>
+            <Route exact path="/analysis" component={Analysis}/>
             <Route exact path="/logout" component={Logout}/>
             <Route exact path="/login" component={LoginPage}/>
             <Route exact path="/signup" component={SignUpPage}/>

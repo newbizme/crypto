@@ -1,5 +1,6 @@
 require('dotenv').config();
 var express = require('express');
+var helmet = require('helmet');
 var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -19,6 +20,7 @@ var User = require('./models/user');
 require('./models').connect(process.env.MONGODB_URI || config.dbUri);
 
 var app = express();
+app.use(helmet());
 
 // Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the user agent is not known
 global.navigator = global.navigator || {};
