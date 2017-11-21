@@ -60,7 +60,9 @@ io.on("connection", socket => {
   socket.emit("CapTable", cmcData);
 
   setInterval(() => getApiAndEmit(socket), 10000);
-  setInterval(() => getCapAndEmit(socket), 360000);
+
+  if (interval) return;
+  interval = setInterval(() => getCapAndEmit(socket), 360000);
 
   socket.on("disconnect", () => {
   })

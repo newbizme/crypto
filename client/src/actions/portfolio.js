@@ -14,7 +14,7 @@ export const RETURN_EXCHANGE_CONNECTIONS = 'RETURN_EXCHANGE_CONNECTIONS';
 export function addTxn(txn) {
     return (dispatch, getState) => {
         // post(txn)
-        console.log('Action>addTxn>', txn);
+        // // console.log('Action>addTxn>', txn);
 
         var config = {
             headers: {'Authorization': `bearer ${Auth.getToken()}`}
@@ -24,7 +24,7 @@ export function addTxn(txn) {
 
         axios.post('/user/v1/txns', data, config)
             .then((response) => {
-                console.log(response);
+                // // console.log(response);
                 dispatch(fetchTxns());
             })
             .catch()
@@ -69,14 +69,14 @@ function returnExchangeConnections(exchanges) {
 
 export function addExchangeConnection(exchange) {
     return (dispatch, getState) => {
-        console.log('AddExchangeConnection', exchange);
+        // console.log('AddExchangeConnection', exchange);
         var config = {
             headers: {'Authorization': `bearer ${Auth.getToken()}`}
         };
     
         axios.post('/user/v1/auth/exchange', exchange, config)
             .then((response) => {
-                console.log('Add>response',response);
+                // console.log('Add>response',response);
                 dispatch(fetchExchangeConnections());
             })
             .catch((error) => {
@@ -108,12 +108,12 @@ export function fetchTxns() {
 
         axios.get('/user/v1/txns', { headers: {'Authorization': `bearer ${Auth.getToken()}`} })
             .then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 dispatch(returnTxns(response.data.txns));
                 dispatch(returnPortfolio(response.data.portfolio));
             })
             .catch((error) => {
-                console.log('Error: ' + error);
+                // console.log('Error: ' + error);
             })
     };
 }

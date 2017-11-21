@@ -295,7 +295,6 @@ function returnPortfolioTimeline(txns) {
         p.push(data);
     })
 
-    console.log(p);
     return p;
 }
 

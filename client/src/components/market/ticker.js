@@ -51,7 +51,6 @@ export default class Ticker extends Component {
 
             let color = '';
             item.change > 0 ? color = '#21ba45' : color = 'red';
-            console.log(item);
             return (
                 <div style={s.tickerItem}>
                     <div style={s.logoSpace}>
