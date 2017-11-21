@@ -71,7 +71,6 @@ export default class ImportTxn extends Component {
             apisecret: this.state.secret,
             password: this.state.passphrase
         }
-        console.log("Add>", exchange);
         // Test new connection
 
         var config = {
@@ -80,7 +79,6 @@ export default class ImportTxn extends Component {
     
         axios.post('/user/v1/auth/test', exchange, config)
             .then((response) => {
-                console.log(response);
                     this.props.addExchange(exchange);
                     this.setState({ error: false });
             })

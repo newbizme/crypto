@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+var encrypt = require('mongoose-encryption');
 
 const ExchangeKeySchema = new mongoose.Schema({
     userID: String,
@@ -10,7 +10,8 @@ const ExchangeKeySchema = new mongoose.Schema({
     created: Date
 });
 
-
+var secret = process.env.ENCRYPTION_SECRET;
+ExchangeKeySchema.plugin(encrypt, { secret: secret, encryptedFields: ['password','apisecret'] });
 
 
 module.exports = mongoose.model('ExchangeKey', ExchangeKeySchema);

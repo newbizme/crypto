@@ -7,7 +7,23 @@ export default class AreaChart extends Component {
     }
 
     render() {
-        // y and y0 are both absolute. eg. for the second stacked area, y0=[y of first stack], and y=y0+[y of second stack]
+        
+        // TODO: 
+        // - Accept portfolio holdings over time. 
+        // - portfolio[last] should contain an object with every coin that was owned at some point. Filter out USD
+        // - Use that to retrieve history data (day increments)
+        // - Use current ticker value as the last datapoint for today's date
+        //
+        // - data = price(USD) * amount over time. Check against portfolio object timestamps along the way
+        // 
+        // - Once X and Y values are denoted for all, need to re-map through and 'stack' (or, temporarily, just use lineSeries)
+        // - Put largest current holding as stack1, second largest as stack2, etc. --> store order in an array
+        // - y and y0 are both absolute. eg. for the second stacked area, y0=[y of first stack], and y=y0+[y of second stack]
+        // 
+        // - Filter options for timeline: 1) This week (?) 2) This month 2) This year 3) All 
+        // - Filter options will just slice overall array as needed (will need to see how this look with that many datapoints,
+        //     might need to re-map for monthly values or something.. we'll see)
+
         return (
             <div style={{display: 'inline-block'}}>
                 <XYPlot

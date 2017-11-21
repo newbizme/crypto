@@ -63,12 +63,15 @@ const NetWorth = (props) => {
     return (
         <div>
             <InvestmentRollup value={net.value} investment={net.investment} />
-            <PieChartVis net={net} />
-            <AreaChart />
+            
         </div>
     )
 }
 
+/*
+<PieChartVis net={net} />
+            <AreaChart />
+            */
 // <SimplePieChart assets={net.assets} />
 
 export default NetWorth;

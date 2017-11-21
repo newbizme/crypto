@@ -97,7 +97,6 @@ router.post('/txns', (req, res) => {
 
     submission.save(function (err, data) {
         if (err) return res.status(500).send({error: err});
-        console.log(data);
         res.status(200).json(data);
     });
 });
@@ -137,7 +136,6 @@ router.get('/auth/exchange', (req, res) => {
 // !!! PRODUCTION
 router.post('/auth/exchange', (req, res) => {
     let key = req.body;
-    console.log(key);
     let password = undefined;
     key.password ? password = key.password : password = undefined;
     key.created = new Date();
@@ -158,7 +156,6 @@ router.post('/auth/exchange', (req, res) => {
     // Save new key
     submission.save(function (err, data) {
         if (err) return res.status(500).send({error: err});
-        console.log(data);
         res.status(200).json(data);
     });
 })
@@ -180,7 +177,6 @@ router.post('/auth/test', asyncMiddleware(async (req, res, next) => {
     let key = req.body;
     !key.password ? key.password = undefined : '';
     var ex = require('../utils/exchange-api');
-    console.log("Test: ", key);
     
     let test = await ex.testConnection(key.exchange, key.apikey, key.apisecret, key.password);
     if (test) {
@@ -216,7 +212,6 @@ router.get('/txns/api', asyncMiddleware(async (req, res, next) => {
 
     getKeysPromise(req.userID).then(async (response) => {
         let txns = await mapKeys(response)
-        console.log('txns:', txns);
         res.status(200).json(txns);
     })    
     

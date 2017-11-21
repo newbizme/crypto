@@ -57,7 +57,6 @@ async function fetchTrades(name, apikey, apisecret, password) {
             exchange.nonce = await function () { return exchange.milliseconds() }
 
             let market = exchange.market(markets[m].symbol);
-            console.log(m);
             let txns = await exchange.privatePostMytrades(exchange.extend({
                 timestamp: 0,
                 limit_trades: 500, 
@@ -74,7 +73,6 @@ async function fetchTrades(name, apikey, apisecret, password) {
                 */
 
             let txnList = await exchange.parseTrades(txns, market)
-            console.log(txnList);
             trades = trades.concat(txnList);
         }
 
