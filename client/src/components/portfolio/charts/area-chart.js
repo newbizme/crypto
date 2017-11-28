@@ -4,6 +4,13 @@ import Auth from '../../../modules/auth';
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
+const s = {
+    chartArea: {
+        display: 'inline-block',
+        color: '#959595'
+    }
+}
+
 
 export default class StackedAreaChart extends Component {
     constructor(props) {
@@ -30,6 +37,7 @@ export default class StackedAreaChart extends Component {
         }
 
         return (
+            <div style={s.chartArea}>
             <AreaChart 
                 width={600} 
                 height={400} 
@@ -45,6 +53,7 @@ export default class StackedAreaChart extends Component {
                 <Area type='monotone' dataKey='BTC' stackId="1" stroke='#ffc658' fill='#ffc658' />
                 <Area type='monotone' dataKey='XRP' stackId="1" stroke='#ffc658' fill='#ffc658' />
             </AreaChart>
+            </div>
         )
     }
 }
