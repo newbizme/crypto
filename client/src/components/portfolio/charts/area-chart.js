@@ -8,7 +8,8 @@ import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 const s = {
     chartArea: {
         display: 'inline-block',
-        color: '#959595'
+        color: '#959595',
+        textAlign: 'left'
     },
     loadingArea: {
         height: '400px',
