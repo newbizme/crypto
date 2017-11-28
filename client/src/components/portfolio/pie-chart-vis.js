@@ -62,8 +62,8 @@ export default class PieChartVis extends Component {
             <div style={{display: 'inline-block'}}>
                 { this.state.hover && this.renderHint() }
             <RadialChart 
-                height={300}
-                width={300}
+                height={400}
+                width={400}
                 data={data}
                 onValueMouseOver={v => this.setState({ hover: v })}
                 style={{display: 'inline-block'}}

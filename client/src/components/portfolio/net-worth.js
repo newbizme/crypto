@@ -2,6 +2,7 @@ import React from 'react';
 import InvestmentRollup from './investment-rollup';
 import SimplePieChart from './pie-chart';
 import PieChartVis from './pie-chart-vis';
+import PieChartRe from './charts/pie-chart-re';
 //import AreaChart from './charts/area-chart';
 import StackedAreaChart from './charts/area-chart';
 
@@ -51,6 +52,11 @@ function convertToUSD(ticker, portfolio) {
     };
 }
 
+const s = {
+    container: {
+        textAlign: 'center'
+    }
+}
 const NetWorth = (props) => {
     if (props.portfolio.length === 0 || props.ticker.length ===0 ) {
         return <div></div>;
@@ -62,7 +68,7 @@ const NetWorth = (props) => {
     const net = convertToUSD(props.ticker, holdings);
 
     return (
-        <div>
+        <div style={s.container}>
             <InvestmentRollup value={net.value} investment={net.investment} />
             <PieChartVis net={net} />
             <StackedAreaChart />
