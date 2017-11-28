@@ -5,6 +5,38 @@ export const RETURN_TXNS = 'RETURN_TXNS';
 export const RETURN_PORTFOLIO = 'RETURN_PORTFOLIO';
 export const RETURN_EXCHANGE_CONNECTIONS = 'RETURN_EXCHANGE_CONNECTIONS';
 
+
+// *****************************
+// HISTORICAL FUNCTIONS
+// *****************************
+// Move all calculations to the server
+export function fetchHistorical() {
+    return (dispatch, getState) => {
+        let coins = [];
+        
+        // Push holdings to array to pass into API
+        for (var key in this.props.holdings) {
+            if (key.toUpperCase() !== 'USD' && key.toUpperCase() !== 'USDT' && key.toLowerCase() !== 'datetime' && key.toLowerCase() !== 'timestamp') {
+                coins.push(key);
+            } 
+        }
+        
+        axios.get('/api/v1/historical?coins=' + coins.join(',') + '&timeframe=' + this.state.timeframe)
+            .then((response) => {
+                /*
+                this.setState({ 
+                    histData: response.data,
+                    timeTo: response.data[coins[0]].timeTo,
+                    timeFrom: response.data[coins[0]].timeFrom
+                    });
+                */
+            });
+    }
+}
+
+
+
+
 // *****************************
 // TRANSACTION FUNCTIONS
 // *****************************

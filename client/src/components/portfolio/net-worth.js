@@ -2,7 +2,8 @@ import React from 'react';
 import InvestmentRollup from './investment-rollup';
 import SimplePieChart from './pie-chart';
 import PieChartVis from './pie-chart-vis';
-import AreaChart from './charts/area-chart';
+//import AreaChart from './charts/area-chart';
+import StackedAreaChart from './charts/area-chart';
 
 function convertToUSD(ticker, portfolio) {
     const btcPrice = ticker['BTC/USDT'].bid;
@@ -63,15 +64,15 @@ const NetWorth = (props) => {
     return (
         <div>
             <InvestmentRollup value={net.value} investment={net.investment} />
-            
+            <PieChartVis net={net} />
+            <StackedAreaChart />
         </div>
     )
 }
 
-/*
-<PieChartVis net={net} />
-            <AreaChart />
-            */
-// <SimplePieChart assets={net.assets} />
+// <AreaChart portfolio={props.portfolio} holdings={holdings} />
+/****
+ * 
+ */
 
 export default NetWorth;

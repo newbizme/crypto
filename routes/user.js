@@ -16,7 +16,42 @@ var ExchangeKey = require('../models/exchange-key');
 const router = new express.Router();
 
 // =========================================================================
-// ++++++++             TRANSACTIONS FUNCTIONS
+// ++++++++            /portfolio/ PORTFOLIO FUNCTIONS
+// =========================================================================
+
+// ~~~ GET PORTFOLIO SERIES DATA
+
+router.get('/portfolio/historical', asyncMiddleware(async (req, res, next) => {
+    var pc = require('../utils/portfolio-calcs');
+    var ex = require('../utils/exchange-api');
+
+    let txns = await pc.getTxnHistory(req);
+
+    // From latest portfolio object, get list of coins
+    let c = txns.portfolio.length;
+    let coins = txns.portfolio[c-1];
+
+    let histData = {};
+    let start = undefined;
+    let stop = undefined;
+    
+    for (var coin in coins) {
+        if (coin != 'USD' && coin != 'USDT' && coin != 'datetime' && coin != 'timestamp') {
+            histData[coin] = await ex.fetchHistorical(coin, 'day');
+            start = histData[coin].timeFrom;
+            stop = histData[coin].timeTo;
+        }
+    }
+    
+    let portfolio = await pc.parsePortfolioTimeline(txns.portfolio, 'day', start, stop);
+
+    let valueOverTime = await pc.calculatePortfolioOverTime(portfolio, histData);
+
+    res.status(200).json(valueOverTime);
+}));
+
+// =========================================================================
+// ++++++++            /TXNS/ TRANSACTIONS FUNCTIONS
 // =========================================================================
 
 // ++++++++++++++++++++++++++++++++
@@ -113,7 +148,7 @@ router.delete('/txns/:id', (req, res) => {
 });
 
 // ++++++++++++++++++++++++++++++++
-// +++++++    AUTOMATIC INPUT
+// +++++++   /AUTH/EXCHANGE/ -- AUTOMATIC INPUT
 // ++++++++++++++++++++++++++++++++
 
 // ~~~ GET EXCHANGE KEYS
@@ -239,6 +274,7 @@ router.get('/test/api', asyncMiddleware( async (req, res, next) => {
 
 // ~~~ INPUT=TXNS, OUTPUT=PORTFOLIO
 // !!! PRODUCTION
+// TODO: Move to portfolio-calcs.js
 function returnPortfolioTimeline(txns) {
     let p = [];
 
