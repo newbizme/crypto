@@ -23,6 +23,8 @@ const s = {
     }
 }
 
+const con = require('../../modules/constants');
+
 export default class PieChartVis extends Component {
     constructor(props) {
         super(props);
@@ -44,12 +46,13 @@ export default class PieChartVis extends Component {
 
     render() {
         let data = [];
-        this.props.net.assets.map((asset) => {
+        this.props.net.assets.map((asset, index) => {
             data.push({ 
                 angle: asset.value,
                 label: asset.currency,
                 value: asset.value,
-                amount: asset.amount
+                amount: asset.amount,
+                color: con.chartColors[Math.floor(index % 10)]
              });
         });
         const data2 = [
@@ -59,7 +62,7 @@ export default class PieChartVis extends Component {
         ];
 
         return (
-            <div style={{display: 'inline-block'}}>
+            <div style={{display: 'inline-block', opacity: '0.6'}}>
                 { this.state.hover && this.renderHint() }
             <RadialChart 
                 height={400}
@@ -68,6 +71,7 @@ export default class PieChartVis extends Component {
                 onValueMouseOver={v => this.setState({ hover: v })}
                 style={{display: 'inline-block'}}
                 onSeriesMouseOut={v => this.setState({ hover: null })}
+                colorType="literal"
                 >
                 
             </RadialChart>
