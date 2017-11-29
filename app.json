@@ -1,0 +1,29 @@
+{
+  "name": "crypto-bot",
+  "scripts": {
+  },
+  "env": {
+    "BITTREX_APIKEY": {
+      "required": true
+    },
+    "BITTREX_APISECRET": {
+      "required": true
+    },
+    "ENCRYPTION_SECRET": {
+      "required": true
+    },
+    "MONGODB_URI": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+    "mongolab"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
