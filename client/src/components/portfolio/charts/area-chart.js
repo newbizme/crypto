@@ -29,6 +29,7 @@ export default class StackedAreaChart extends Component {
     }
 
     componentWillMount() {
+        /*
         var config = {
             headers: {'Authorization': `bearer ${Auth.getToken()}`}
         };
@@ -36,11 +37,13 @@ export default class StackedAreaChart extends Component {
             .then((response) => {
                 this.setState({ data: response.data });
             })
+        */
     }
 
     renderAreaComponents = () => {
         let coins = [];
-        for (var key in this.state.data[0]) {
+        //for (var key in this.state.data[0]) {
+        for (var key in this.props.dataSeries[0]) {
             if (key !== 'name' && key !== 'timestamp') {
                 coins.push(key);
             }
@@ -50,10 +53,8 @@ export default class StackedAreaChart extends Component {
         })
     }
 
-    // TODO: Map over one of the object keys to render <Area /> components using colors from a bigger list
-
     render() {
-        if (!this.state.data) {
+        if (!this.props.dataSeries) {
             return (
             <div style={s.loadingArea}>
                 <Segment style={s.loadingArea}>
@@ -70,7 +71,8 @@ export default class StackedAreaChart extends Component {
             <AreaChart 
                 width={600} 
                 height={400} 
-                data={this.state.data}
+                // data={this.state.data}
+                data={this.props.dataSeries}
                 margin={{top: 10, right: 30, left: 0, bottom: 0}}
                 >
                 <XAxis dataKey="name"/>

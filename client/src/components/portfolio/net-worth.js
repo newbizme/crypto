@@ -13,7 +13,8 @@ function convertToUSD(ticker, portfolio) {
     let vals = [];
     let net = 0;
     let investment = 0;
-    portfolio.hasOwnProperty('USD') ? investment = portfolio['USD'] : '';
+    portfolio.hasOwnProperty('USD') ? investment += portfolio['USD'] : '';
+    portfolio.hasOwnProperty('USDT') ? investment += portfolio['USDT'] : '';
 
     for (const key in portfolio) {
         if (key !== 'USD' && key !== 'timestamp') {
@@ -71,7 +72,7 @@ const NetWorth = (props) => {
         <div style={s.container}>
             <InvestmentRollup value={net.value} investment={net.investment} />
             <PieChartVis net={net} />
-            <StackedAreaChart />
+            <StackedAreaChart dataSeries={props.dataSeries} />
         </div>
     )
 }
