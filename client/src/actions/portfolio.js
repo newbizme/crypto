@@ -53,6 +53,7 @@ export function addTxn(txn) {
             .then((response) => {
                 // // console.log(response);
                 dispatch(fetchTxns());
+                
             })
             .catch()
     };
@@ -138,6 +139,7 @@ export function fetchTxns() {
                 // console.log(response.data);
                 dispatch(returnTxns(response.data.txns));
                 dispatch(returnPortfolio(response.data.portfolio));
+                dispatch(fetchPortfolioSeries());
             })
             .catch((error) => {
                 // console.log('Error: ' + error);
