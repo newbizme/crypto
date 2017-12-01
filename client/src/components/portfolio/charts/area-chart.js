@@ -3,7 +3,7 @@ import axios from 'axios';
 import Auth from '../../../modules/auth';
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
+import { Dimmer, Loader, Image, Segment, Menu } from 'semantic-ui-react';
 
 const s = {
     chartArea: {
@@ -15,6 +15,11 @@ const s = {
         height: '400px',
         width: '600px',
         display: 'inline-block'
+    },
+    timeMenu: {
+        position: 'relative',
+        right: '-70px',
+        top: '20px',
     }
 }
 
@@ -68,6 +73,9 @@ export default class StackedAreaChart extends Component {
 
         return (
             <div style={s.chartArea}>
+            <Menu inverted secondary size='mini' style={s.timeMenu}>
+                <Menu.Item name='3mo' active={true} />
+            </Menu>
             <AreaChart 
                 width={600} 
                 height={400} 
