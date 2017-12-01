@@ -22,6 +22,17 @@ const router = new express.Router();
 // ~~~ GET PORTFOLIO SERIES DATA
 
 router.get('/portfolio/historical', asyncMiddleware(async (req, res, next) => {
+    // TODO: Configure so that multiple time ranges can be selected
+    // 1mo -> hour inc, 6x aggregate
+    // 3mo -> day inc, 1x aggregate
+    // 6mo -> day inc, 2x aggregate
+    // 1yr -> day inc, 5x aggregate
+    // all -> ?? need to identify portfolio start time, and conditionally determine parameters from there
+
+    let range = '3mo';
+    if (req.query.range) { range = req.query.range; }
+
+
     var pc = require('../utils/portfolio-calcs');
     var ex = require('../utils/exchange-api');
 
