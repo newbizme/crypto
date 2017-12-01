@@ -1,9 +1,36 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardText } from 'material-ui/Card';
+import {orange500, blue500} from 'material-ui/styles/colors';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
+
+const styles = {
+  card: {
+    backgroundColor: '#555',
+    color: '#fff',
+    textAlign: 'center',
+    width: '350px',
+    margin: '0 auto',
+    borderRadius: '25px'
+  },
+  input: {
+    color: '#fff'
+  },
+  errorStyle: {
+    color: orange500,
+  },
+  underlineStyle: {
+    borderColor: blue500
+  },
+  floatingLabelStyle: {
+    color: blue500
+  },
+  floatingLabelFocusStyle: {
+    color: blue500
+  }
+}
 
 const SignUpForm = ({
   onSubmit,
@@ -11,7 +38,7 @@ const SignUpForm = ({
   errors,
   user,
 }) => (
-  <Card className="container">
+  <Card style={styles.card} className="container">
     <form action="/" onSubmit={onSubmit}>
       <h2 className="card-heading">Sign Up</h2>
 
@@ -24,6 +51,12 @@ const SignUpForm = ({
           errorText={errors.name}
           onChange={onChange}
           value={user.name}
+          hintStyle={styles.errorStyle}
+          errorStyle={styles.errorStyle}
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineStyle}
+          floatingLabelStyle={styles.floatingLabelStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
         />
       </div>
 
@@ -34,6 +67,12 @@ const SignUpForm = ({
           errorText={errors.email}
           onChange={onChange}
           value={user.email}
+          hintStyle={styles.errorStyle}
+          errorStyle={styles.errorStyle}
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineStyle}
+          floatingLabelStyle={styles.floatingLabelStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
         />
       </div>
 
@@ -45,6 +84,12 @@ const SignUpForm = ({
           onChange={onChange}
           errorText={errors.password}
           value={user.password}
+          hintStyle={styles.errorStyle}
+          errorStyle={styles.errorStyle}
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineStyle}
+          floatingLabelStyle={styles.floatingLabelStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
         />
       </div>
 
@@ -52,7 +97,7 @@ const SignUpForm = ({
         <RaisedButton type="submit" label="Create New Account" primary />
       </div>
 
-      <CardText>Already have an account? <Link to={'/login'}>Log in</Link></CardText>
+      <CardText style={styles.card}>Already have an account? <Link to={'/login'}>Log in</Link></CardText>
     </form>
   </Card>
 );

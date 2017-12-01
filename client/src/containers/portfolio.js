@@ -22,7 +22,8 @@ import {
   deleteTxn,
   addExchangeConnection,
   fetchExchangeConnections,
-  deleteExchangeConnection
+  deleteExchangeConnection,
+  fetchPortfolioSeries
 } from '../actions/portfolio';
 
 import {
@@ -50,6 +51,7 @@ class Portfolio extends Component {
 
 
     this.props.fetchTxns();
+    this.props.fetchPortfolioSeries();
   }
 
   testAuthClient = () => {
@@ -85,7 +87,7 @@ class Portfolio extends Component {
             </Message>
             </div> }
 
-        <NetWorth ticker={this.props.ticker} portfolio={this.props.portfolio.portfolio} />
+        <NetWorth ticker={this.props.ticker} portfolio={this.props.portfolio.portfolio} dataSeries={this.props.portfolio.dataSeries} />
         <br/>
         <AddTxn addTxn={this.props.addTxn} />
         <ImportTxn
@@ -137,7 +139,8 @@ function mapDispatchToProps(dispatch) {
     returnTickers,
     addExchangeConnection,
     fetchExchangeConnections,
-    deleteExchangeConnection
+    deleteExchangeConnection,
+    fetchPortfolioSeries
   }, dispatch);
 }
 

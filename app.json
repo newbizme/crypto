@@ -1,29 +1,30 @@
 {
-  "name": "crypto-bot",
-  "scripts": {
-  },
-  "env": {
-    "BITTREX_APIKEY": {
-      "required": true
+
+    "name": "crypto-bot",
+    "scripts": {
     },
-    "BITTREX_APISECRET": {
-      "required": true
+    "env": {
+      "BITTREX_APIKEY": {
+        "required": true
+      },
+      "BITTREX_APISECRET": {
+        "required": true
+      },
+      "ENCRYPTION_SECRET": {
+        "required": true
+      },
+      "MONGODB_URI": {
+        "required": true
+      }
     },
-    "ENCRYPTION_SECRET": {
-      "required": true
+    "formation": {
     },
-    "MONGODB_URI": {
-      "required": true
-    }
-  },
-  "formation": {
-  },
-  "addons": [
-    "mongolab"
-  ],
-  "buildpacks": [
-    {
-      "url": "heroku/nodejs"
-    }
-  ]
-}
+    "addons": [
+      "mongolab"
+    ],
+    "buildpacks": [
+      {
+        "url": "heroku/nodejs"
+      }
+    ]
+  }

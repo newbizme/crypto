@@ -3,7 +3,34 @@ import Auth from '../modules/auth';
 
 export const RETURN_TXNS = 'RETURN_TXNS';
 export const RETURN_PORTFOLIO = 'RETURN_PORTFOLIO';
+export const RETURN_PORTFOLIO_SERIES = 'RETURN_PORTFOLIO_SERIES';
 export const RETURN_EXCHANGE_CONNECTIONS = 'RETURN_EXCHANGE_CONNECTIONS';
+
+
+// *****************************
+// HISTORICAL FUNCTIONS
+// *****************************
+
+export function fetchPortfolioSeries() {
+    return (dispatch, getState) => {
+        var config = {
+            headers: {'Authorization': `bearer ${Auth.getToken()}`}
+        };
+        axios.get('/user/v1/portfolio/historical', config)
+            .then((response) => {
+                dispatch(returnPortfolioSeriesData(response.data));
+            })
+    }
+}
+function returnPortfolioSeriesData(data) {
+    return {
+        type: RETURN_PORTFOLIO_SERIES,
+        payload: data
+    }
+}
+
+
+
 
 // *****************************
 // TRANSACTION FUNCTIONS
@@ -26,6 +53,7 @@ export function addTxn(txn) {
             .then((response) => {
                 // // console.log(response);
                 dispatch(fetchTxns());
+                
             })
             .catch()
     };
@@ -111,6 +139,7 @@ export function fetchTxns() {
                 // console.log(response.data);
                 dispatch(returnTxns(response.data.txns));
                 dispatch(returnPortfolio(response.data.portfolio));
+                dispatch(fetchPortfolioSeries());
             })
             .catch((error) => {
                 // console.log('Error: ' + error);

@@ -5,6 +5,31 @@ const ccxt = require('ccxt');
 // Be sure to check exchange API for specific requirements to include in the params object
 
 // ++++++++++++++++++++++++++++++++
+// +++++++    HISTORICAL DATA
+// ++++++++++++++++++++++++++++++++
+
+async function fetchHistorical(coin, interval) {
+    // CrptoCompare API
+    // https://min-api.cryptocompare.com/data/histoday?fsym=XRP&tsym=USD&limit=60&aggregate=3&e=CCCAGG 
+    // https://www.cryptocompare.com/api/#-api-data-histoday-
+    // limit = max 2000
+
+    let inc = 'day'; // day, hour, minute
+
+    let response = await axios.get(`https://min-api.cryptocompare.com/data/histo${inc}?fsym=${coin}&tsym=USD&limit=90&aggregate=1&e=CCCAGG`)
+    let data = {data: [], timeTo: response.data.TimeTo, timeFrom: response.data.TimeFrom};
+    response.data.Data.map((d) => {
+        data.data.push({
+            x: d.time,
+            y: d.close
+        })
+    })
+    return data;
+    // return response.data.Data;
+}
+
+
+// ++++++++++++++++++++++++++++++++
 // +++++++    RETURN TRADES
 // ++++++++++++++++++++++++++++++++
 
@@ -114,5 +139,6 @@ async function testConnection(name, apikey, apisecret, password) {
 
 module.exports = {
     fetchTrades,
-    testConnection
+    testConnection,
+    fetchHistorical
 };

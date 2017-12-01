@@ -1,51 +1,102 @@
 import React, { Component } from 'react';
-import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries, AreaSeries} from 'react-vis';
+import axios from 'axios';
+import Auth from '../../../modules/auth';
 
-export default class AreaChart extends Component {
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { Dimmer, Loader, Image, Segment, Menu } from 'semantic-ui-react';
+
+const s = {
+    chartArea: {
+        display: 'inline-block',
+        color: '#959595',
+        textAlign: 'left'
+    },
+    loadingArea: {
+        height: '400px',
+        width: '600px',
+        display: 'inline-block'
+    },
+    timeMenu: {
+        position: 'relative',
+        right: '-70px',
+        top: '20px',
+    }
+}
+
+let con = require('../../../modules/constants');
+
+
+export default class StackedAreaChart extends Component {
     constructor(props) {
         super(props);
+
+        this.state = { data: undefined }
+    }
+
+    componentWillMount() {
+        /*
+        var config = {
+            headers: {'Authorization': `bearer ${Auth.getToken()}`}
+        };
+        axios.get('/user/v1/portfolio/historical', config)
+            .then((response) => {
+                this.setState({ data: response.data });
+            })
+        */
+    }
+
+    renderAreaComponents = () => {
+        let coins = [];
+        //for (var key in this.state.data[0]) {
+        for (var key in this.props.dataSeries[0]) {
+            if (key !== 'name' && key !== 'timestamp') {
+                coins.push(key);
+            }
+        }
+        return coins.map((coin, index) => {
+            return <Area type='monotone' dataKey={coin} stackId="1" stroke={con.chartColors[Math.floor(index % 10)]} fill={con.chartColors[Math.floor(index % 10)]} />;
+        })
     }
 
     render() {
-        
-        // TODO: 
-        // - Accept portfolio holdings over time. 
-        // - portfolio[last] should contain an object with every coin that was owned at some point. Filter out USD
-        // - Use that to retrieve history data (day increments)
-        // - Use current ticker value as the last datapoint for today's date
-        //
-        // - data = price(USD) * amount over time. Check against portfolio object timestamps along the way
-        // 
-        // - Once X and Y values are denoted for all, need to re-map through and 'stack' (or, temporarily, just use lineSeries)
-        // - Put largest current holding as stack1, second largest as stack2, etc. --> store order in an array
-        // - y and y0 are both absolute. eg. for the second stacked area, y0=[y of first stack], and y=y0+[y of second stack]
-        // 
-        // - Filter options for timeline: 1) This week (?) 2) This month 2) This year 3) All 
-        // - Filter options will just slice overall array as needed (will need to see how this look with that many datapoints,
-        //     might need to re-map for monthly values or something.. we'll see)
+        if (!this.props.dataSeries) {
+            return (
+            <div style={s.loadingArea}>
+                <Segment style={s.loadingArea}>
+                    <Dimmer active>
+                        <Loader size='massive' active inline='centered'>Loading</Loader>
+                    </Dimmer>
+                </Segment>
+            </div>
+            );
+        }
 
         return (
-            <div style={{display: 'inline-block'}}>
-                <XYPlot
-                    width={300}
-                    height={300}>
-                    <HorizontalGridLines />
-                    <AreaSeries
-                        data={[
-                        {x: 1, y: 10, y0: 0},
-                        {x: 2, y: 5, y0: 0},
-                        {x: 3, y: 15, y0: 0}
-                        ]}/>
-                    <AreaSeries
-                        data={[
-                        {x: 1, y: 13, y0: 10},
-                        {x: 2, y: 12, y0: 5},
-                        {x: 3, y: 21, y0: 15}
-                        ]}/>
-                    <XAxis />
-                    <YAxis />
-                </XYPlot>
+            <div style={s.chartArea}>
+            <Menu inverted secondary size='mini' style={s.timeMenu}>
+                <Menu.Item name='3mo' active={true} />
+            </Menu>
+            <AreaChart 
+                width={600} 
+                height={400} 
+                // data={this.state.data}
+                data={this.props.dataSeries}
+                margin={{top: 10, right: 30, left: 0, bottom: 0}}
+                >
+                <XAxis dataKey="name"/>
+                <YAxis/>
+                <CartesianGrid strokeDasharray="3 3"/>
+                <Tooltip/>
+                { this.renderAreaComponents() }
+            </AreaChart>
             </div>
-        );
+        )
     }
 }
+
+/**
+ * <Area type='monotone' dataKey='ETH' stackId="1" stroke='#8884d8' fill='#8884d8' />
+                <Area type='monotone' dataKey='GNT' stackId="1" stroke='#82ca9d' fill='#82ca9d' />
+                <Area type='monotone' dataKey='BTC' stackId="1" stroke='#ffc658' fill='#ffc658' />
+                <Area type='monotone' dataKey='XRP' stackId="1" stroke='#ffc658' fill='#ffc658' />
+ */

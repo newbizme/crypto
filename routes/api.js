@@ -75,33 +75,26 @@ router.get('/exchanges/:name', asyncMiddleware(async (req, res, next) => {
 
 }));
 
-/*
-router.get('/exchanges/candlesticks/:name/:curr', asyncMiddleware(async (req, res, next) => {
-    // '/api/v1/exchanges/candlesticks/gdax/ETH-USD'
-    let exchange = new ccxt[req.params.name];
-    let curr = req.params.curr.replace("-","/");
-
-    let markets = await exchange.loadMarkets();
-
-    let candlesticks = await exchange.fetchOHLCV(curr, '1h');
-    let candleData = [];
-
-    const parseDate = timeParse("%Q");
-
-    candlesticks.reverse().map((c) => {
-        candleData.push({
-            date: new Date(c[0]),
-            open: c[1],
-            high: c[2],
-            low: c[3],
-            close: c[4],
-            volume: c[5]
-        })
+router.get('/historical', asyncMiddleware(async (req, res, next) => {
+    // ?coins=eth,btc,xrp
+    // &timeframe=1w || 1mo || 6mo || 1y || all
+    const coins = req.query.coins.split(',');
+    let timeframe = '1mo';
+    if (req.query.timeframe) timeframe = req.query.timeframe;
+    
+    let data = {};
+    coins.map((coin) => {  
+        data[coin.toUpperCase()] = [];
     })
     
-    res.status(200).json(candleData);
-}));
-*/
+    var ex = require('../utils/exchange-api');
+
+    for (var coin in data) {
+        data[coin] = await ex.fetchHistorical(coin, timeframe);
+    }
+
+    res.status(200).json(data);
+}))
 
 router.get('/exchanges/candlesticks/:exchange/:curr', asyncMiddleware(async (req, res, next) => {
     // '/api/v1/exchanges/candlesticks?timeframe=1h&since=<?>&limit=<?>'

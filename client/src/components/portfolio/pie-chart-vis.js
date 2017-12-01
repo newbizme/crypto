@@ -6,22 +6,22 @@ const s = {
     hint: {
         display: 'inline-block',
         position: 'absolute',
-        backgroundColor: '#222',
-        opacity: '.9',
+        backgroundColor: '#fff',
         height: '65px',
         width: '125px',
         zIndex: '1',
-        textAlign: 'center'
+        textAlign: 'center',
+        opacity: '1.0'
     },
     hintTitle: {
         fontSize: '1.2em',
-        color: 'rgb(33, 186, 69)'
     },
     hintData: {
         fontSize: '1.2em',
-        color: 'rgb(33, 186, 69)'
     }
 }
+
+const con = require('../../modules/constants');
 
 export default class PieChartVis extends Component {
     constructor(props) {
@@ -36,20 +36,23 @@ export default class PieChartVis extends Component {
     renderHint = () => {
         return (
             <div style={s.hint} className="pie-hint">
+                <div style={{color: this.state.hover.color}}>
                 <p style={s.hintTitle}>{Math.round(this.state.hover.amount * 1e2)/1e2} {this.state.hover.label}</p>
                 <span style={s.hintData}>${this.state.hover.value}</span>
+                </div>
             </div>
         );
     }
 
     render() {
         let data = [];
-        this.props.net.assets.map((asset) => {
+        this.props.net.assets.map((asset, index) => {
             data.push({ 
                 angle: asset.value,
                 label: asset.currency,
                 value: asset.value,
-                amount: asset.amount
+                amount: asset.amount,
+                color: con.chartColors[Math.floor(index % 10)]
              });
         });
         const data2 = [
@@ -62,12 +65,13 @@ export default class PieChartVis extends Component {
             <div style={{display: 'inline-block'}}>
                 { this.state.hover && this.renderHint() }
             <RadialChart 
-                height={300}
-                width={300}
+                height={400}
+                width={400}
                 data={data}
                 onValueMouseOver={v => this.setState({ hover: v })}
-                style={{display: 'inline-block'}}
+                style={{display: 'inline-block', opacity: '0.6'}}
                 onSeriesMouseOut={v => this.setState({ hover: null })}
+                colorType="literal"
                 >
                 
             </RadialChart>

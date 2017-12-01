@@ -32,7 +32,6 @@ class Market extends Component {
     }
 
     render() {
-        console.log(this.props.marketCap);
         return (
             <div className="market-container" style={styles.container}>
                 <MarketTable data={this.props.marketCap} />

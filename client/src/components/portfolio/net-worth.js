@@ -2,7 +2,9 @@ import React from 'react';
 import InvestmentRollup from './investment-rollup';
 import SimplePieChart from './pie-chart';
 import PieChartVis from './pie-chart-vis';
-import AreaChart from './charts/area-chart';
+import PieChartRe from './charts/pie-chart-re';
+//import AreaChart from './charts/area-chart';
+import StackedAreaChart from './charts/area-chart';
 
 function convertToUSD(ticker, portfolio) {
     const btcPrice = ticker['BTC/USDT'].bid;
@@ -11,7 +13,8 @@ function convertToUSD(ticker, portfolio) {
     let vals = [];
     let net = 0;
     let investment = 0;
-    portfolio.hasOwnProperty('USD') ? investment = portfolio['USD'] : '';
+    portfolio.hasOwnProperty('USD') ? investment += portfolio['USD'] : '';
+    portfolio.hasOwnProperty('USDT') ? investment += portfolio['USDT'] : '';
 
     for (const key in portfolio) {
         if (key !== 'USD' && key !== 'timestamp') {
@@ -50,6 +53,11 @@ function convertToUSD(ticker, portfolio) {
     };
 }
 
+const s = {
+    container: {
+        textAlign: 'center'
+    }
+}
 const NetWorth = (props) => {
     if (props.portfolio.length === 0 || props.ticker.length ===0 ) {
         return <div></div>;
@@ -61,17 +69,17 @@ const NetWorth = (props) => {
     const net = convertToUSD(props.ticker, holdings);
 
     return (
-        <div>
+        <div style={s.container}>
             <InvestmentRollup value={net.value} investment={net.investment} />
-            
+            <PieChartVis net={net} />
+            <StackedAreaChart dataSeries={props.dataSeries} />
         </div>
     )
 }
 
-/*
-<PieChartVis net={net} />
-            <AreaChart />
-            */
-// <SimplePieChart assets={net.assets} />
+// <AreaChart portfolio={props.portfolio} holdings={holdings} />
+/****
+ * 
+ */
 
 export default NetWorth;
