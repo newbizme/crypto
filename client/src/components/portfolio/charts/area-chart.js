@@ -59,7 +59,7 @@ export default class StackedAreaChart extends Component {
     }
 
     render() {
-        if (!this.props.dataSeries) {
+        if (this.props.dataSeries.length === 0) {
             return (
             <div style={s.loadingArea}>
                 <Segment style={s.loadingArea}>
