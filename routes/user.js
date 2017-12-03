@@ -1,5 +1,6 @@
 const express = require('express');
 const ccxt = require('ccxt');
+const axios = require('axios');
 
 const asyncMiddleware = fn => (req, res, next) => {
     Promise.resolve(fn(req, res, next))
@@ -41,7 +42,6 @@ router.get('/portfolio/historical', asyncMiddleware(async (req, res, next) => {
     // From latest portfolio object, get list of coins
     let c = txns.portfolio.length;
     let coins = txns.portfolio[c-1];
-
     let histData = {};
     let start = undefined;
     let stop = undefined;
@@ -53,13 +53,44 @@ router.get('/portfolio/historical', asyncMiddleware(async (req, res, next) => {
             stop = histData[coin].timeTo;
         }
     }
-    
-    let portfolio = await pc.parsePortfolioTimeline(txns.portfolio, 'day', start, stop);
 
+    let portfolio = await pc.parsePortfolioTimeline(txns.portfolio, 'day', start, stop);
     let valueOverTime = await pc.calculatePortfolioOverTime(portfolio, histData);
+
+    /* For testing:
+    res.status(200).json({ 
+        txnsPortfolio: txns.portfolio, 
+        histData: histData,
+        start: start,
+        stop: stop,
+        portfolio: portfolio, 
+        valueOverTime: valueOverTime });
+    */
 
     res.status(200).json(valueOverTime);
 }));
+
+// **** CURRENT VALUE OF PORTFOLIO ****
+// TODO: Convert this to a socket somehow
+router.get('/portfolio/current', asyncMiddleware(async (req, res, next) => {
+    var pc = require('../utils/portfolio-calcs');
+    let txns = await pc.getTxnHistory(req);
+
+    // From latest portfolio object, get list of coins
+    let c = txns.portfolio.length;
+    let last = txns.portfolio[c-1];
+    let coins = [];
+    for (var coin in last) {
+        if (coin != 'USD' && coin != 'USDT' && coin != 'datetime' && coin != 'timestamp') {
+            coins.push(coin);
+        }
+    }
+
+    axios.get(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coins.join(',')}&tsyms=USD&extraParams=cryptovue-io`)
+        .then((response) => {
+            res.status(200).json(response.data);
+        })
+}))
 
 // =========================================================================
 // ++++++++            /TXNS/ TRANSACTIONS FUNCTIONS

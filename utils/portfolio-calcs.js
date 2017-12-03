@@ -114,7 +114,6 @@ function returnPortfolioTimeline(txns) {
 // stop: UTC time to stop
 async function parsePortfolioTimeline(portfolio, interval, start, stop) {
     let int = 24*60*60; // TODO: expand to allow hourly, weekly, etc.
-    console.log('start: ' + start, 'stop: ' + stop);
 
     portfolio.map((p) => { 
         let timestamp = Date.parse(p.datetime)/1000;
@@ -133,13 +132,17 @@ async function parsePortfolioTimeline(portfolio, interval, start, stop) {
       do {
         p++;
       }
-      while (portfolio[p].timestamp <= ts)
-      // subtract one to remove the unnecessary p++ from last do loop
-      p--;
+      while (portfolio[p].timestamp <= ts && p-1 >= portfolio.length)
+      
+      if (portfolio[p].timestamp > ts) {
+        // subtract one to remove the unnecessary p++ from last do loop
+        p--;
+      }
     }
-  
+    
     // For each time range increment, find the closing portfolio balances
     do {
+
       if (portfolio[p+1] && portfolio[p+1].timestamp > ts + int) {
         // if next snapshot is outside ts -> ts+int time range, push
         data.push({ timestamp: ts, coins: Object.assign({}, portfolio[p]) })
@@ -174,7 +177,6 @@ async function calculatePortfolioOverTime(portfolio, data) {
             coins.push(coin); 
         }
     }
-
     let portfolioData = [];
     
     portfolio.map((p, index) => {

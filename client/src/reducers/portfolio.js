@@ -1,14 +1,16 @@
 import { 
     RETURN_TXNS,
     RETURN_PORTFOLIO,
-    RETURN_PORTFOLIO_SERIES
+    RETURN_PORTFOLIO_SERIES,
+    RETURN_MARKET_INFO
 } from '../actions/portfolio';
 import { LOGOUT_USER } from '../actions/index';
 
 const initialState = {
     txns: [],
     portfolio: [],
-    dataSeries: []
+    dataSeries: [],
+    marketInfo: undefined
 };
 
 const portfolio = (state = initialState, action) => {
@@ -24,6 +26,10 @@ const portfolio = (state = initialState, action) => {
         case RETURN_PORTFOLIO_SERIES:
             return Object.assign({}, state, {
                 dataSeries: action.payload
+            })
+        case RETURN_MARKET_INFO:
+            return Object.assign({}, state, {
+                marketInfo: action.payload
             })
         case LOGOUT_USER:
             return Object.assign({}, initialState);

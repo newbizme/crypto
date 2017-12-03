@@ -5,6 +5,7 @@ export const RETURN_TXNS = 'RETURN_TXNS';
 export const RETURN_PORTFOLIO = 'RETURN_PORTFOLIO';
 export const RETURN_PORTFOLIO_SERIES = 'RETURN_PORTFOLIO_SERIES';
 export const RETURN_EXCHANGE_CONNECTIONS = 'RETURN_EXCHANGE_CONNECTIONS';
+export const RETURN_MARKET_INFO = 'RETURN_MARKET_INFO';
 
 
 // *****************************
@@ -29,7 +30,23 @@ function returnPortfolioSeriesData(data) {
     }
 }
 
-
+function fetchMarketInfo() {
+    return (dispatch, getState) => {
+        var config = {
+            headers: {'Authorization': `bearer ${Auth.getToken()}`}
+        };
+        axios.get('/user/v1/portfolio/current', config)
+            .then((response) => {
+                dispatch(returnMarketInfo(response.data));
+            })
+    }
+}
+function returnMarketInfo(data) {
+    return {
+        type: RETURN_MARKET_INFO,
+        payload: data
+    }
+}
 
 
 // *****************************
@@ -140,6 +157,7 @@ export function fetchTxns() {
                 dispatch(returnTxns(response.data.txns));
                 dispatch(returnPortfolio(response.data.portfolio));
                 dispatch(fetchPortfolioSeries());
+                dispatch(fetchMarketInfo());
             })
             .catch((error) => {
                 // console.log('Error: ' + error);

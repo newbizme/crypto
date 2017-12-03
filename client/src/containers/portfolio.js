@@ -87,7 +87,11 @@ class Portfolio extends Component {
             </Message>
             </div> }
 
-        <NetWorth ticker={this.props.ticker} portfolio={this.props.portfolio.portfolio} dataSeries={this.props.portfolio.dataSeries} />
+        <NetWorth 
+          ticker={this.props.ticker} 
+          portfolio={this.props.portfolio.portfolio} 
+          dataSeries={this.props.portfolio.dataSeries}
+          marketInfo={this.props.portfolio.marketInfo} />
         <br/>
         <AddTxn addTxn={this.props.addTxn} />
         <ImportTxn
