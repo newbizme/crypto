@@ -75,6 +75,55 @@ router.get('/exchanges/:name', asyncMiddleware(async (req, res, next) => {
 
 }));
 
+router.get('/coin-info/:name', asyncMiddleware(async (req, res, next) => {
+    const coin = req.params.name.toUpperCase();
+
+    // get /coinsnapshot -> market {}
+    // get /histoMinute limit=1440 -> day []
+    // get /histoDay limit=365 -> year []
+    // year.slice(335) -> month []
+    // TODO: /histoDay agg=3 limit=2000 -> all[]
+
+    let market = await axios.get(`https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=${coin}&tsym=USD`);
+    let histoMinute = await axios.get(`https://min-api.cryptocompare.com/data/histominute?fsym=${coin}&tsym=USD&aggregate=5`);
+    let histoDay = await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${coin}&tsym=USD&aggregate=1&limit=365`);
+
+    /*
+    let date = new Date(p.timestamp * 1000);
+        let dateStr = (date.getMonth() + 1) + '/' + date.getDate();
+        datapoint.name = dateStr;
+        */
+
+    let day = histoMinute.data.Data;
+    day.map((d) => {
+        let date = new Date(d.time * 1000);
+        let minutes = date.getMinutes().toString();
+        minutes.length === 1 ? minutes = ('0' + minutes) : '';
+
+        let timeStr = (date.getHours() + ':' + minutes);
+        d.name = timeStr;
+    })
+
+    let year = histoDay.data.Data;
+    year.map((d) => {
+        let date = new Date(d.time * 1000);
+        let dateStr = (date.getMonth() + 1) + '/' + date.getDate();
+        d.name = dateStr;
+    })
+    let month = year.slice(335);
+    
+
+    res.status(200).json({
+        market: market.data.Data,
+        historical: {
+            day: day,
+            month: month,
+            year: year,
+            all: []
+        }
+    })
+}))
+/*
 router.get('/historical', asyncMiddleware(async (req, res, next) => {
     // ?coins=eth,btc,xrp
     // &timeframe=1w || 1mo || 6mo || 1y || all
@@ -95,6 +144,7 @@ router.get('/historical', asyncMiddleware(async (req, res, next) => {
 
     res.status(200).json(data);
 }))
+*/
 
 router.get('/exchanges/candlesticks/:exchange/:curr', asyncMiddleware(async (req, res, next) => {
     // '/api/v1/exchanges/candlesticks?timeframe=1h&since=<?>&limit=<?>'

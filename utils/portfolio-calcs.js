@@ -182,7 +182,6 @@ async function calculatePortfolioOverTime(portfolio, data) {
     portfolio.map((p, index) => {
         // x = p.timestamp
         let datapoint = { timestamp: p.timestamp };
-        // TODO: Parse name to a date string
 
         // datapoint.name = date
         let date = new Date(p.timestamp * 1000);

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { Icon, Table, Button } from 'semantic-ui-react';
 
 const s = {
@@ -36,10 +38,12 @@ export default class MarketTable extends Component {
                 <Table.Row>
                     <Table.Cell>{ c.rank }</Table.Cell>
                     <Table.Cell>
+                        <Link to={"/coin/" + c.symbol}>
                         <div style={s.logoSpace}>
                             <i style={s.logo} className={ 'cc ' + c.symbol } title={ c.symbol }></i>
                         </div>
                         { c.name }
+                        </Link>
                     </Table.Cell>
                     <Table.Cell>${ c.price_usd > 1 ? nf.format(Math.round(c.price_usd * 1e2) / 1e2) : nf.format(c.price_usd) }</Table.Cell>
                     <Table.Cell>${ nf.format(c.market_cap_usd)}</Table.Cell>
