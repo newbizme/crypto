@@ -6,6 +6,7 @@ import Home from './containers/home';
 import Market from './containers/market';
 import Analysis from './containers/analysis';
 import Portfolio from './containers/portfolio';
+import Coin from './containers/coin';
 import LoginPage from './containers/login-page';
 import SignUpPage from './containers/sign-up-page';
 import Logout from './components/logout';
@@ -39,6 +40,7 @@ class App extends Component {
             <Route exact path="/portfolio" component={Portfolio}/>
             <Route exact path="/market" component={Market}/>
             <Route exact path="/analysis" component={Analysis}/>
+            <Route exact path="/coin/:name" component={Coin}/>
             <Route exact path="/logout" component={Logout}/>
             <Route exact path="/login" component={LoginPage}/>
             <Route exact path="/signup" component={SignUpPage}/>

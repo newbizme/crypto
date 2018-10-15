@@ -15,8 +15,9 @@ async function fetchHistorical(coin, interval) {
     // limit = max 2000
 
     let inc = 'day'; // day, hour, minute
+    let range = 90;
 
-    let response = await axios.get(`https://min-api.cryptocompare.com/data/histo${inc}?fsym=${coin}&tsym=USD&limit=90&aggregate=1&e=CCCAGG`)
+    let response = await axios.get(`https://min-api.cryptocompare.com/data/histo${inc}?fsym=${coin}&tsym=USD&limit=${range}&aggregate=1&e=CCCAGG`)
     let data = {data: [], timeTo: response.data.TimeTo, timeFrom: response.data.TimeFrom};
     response.data.Data.map((d) => {
         data.data.push({

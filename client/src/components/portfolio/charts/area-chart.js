@@ -33,18 +33,6 @@ export default class StackedAreaChart extends Component {
         this.state = { data: undefined }
     }
 
-    componentWillMount() {
-        /*
-        var config = {
-            headers: {'Authorization': `bearer ${Auth.getToken()}`}
-        };
-        axios.get('/user/v1/portfolio/historical', config)
-            .then((response) => {
-                this.setState({ data: response.data });
-            })
-        */
-    }
-
     renderAreaComponents = () => {
         let coins = [];
         //for (var key in this.state.data[0]) {
